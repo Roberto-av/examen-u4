@@ -1,228 +1,242 @@
-<?php 
-	session_start();
+<?php
+    session_start();
+    if(isset($_POST["action"])){
+        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+            echo "Error: El token no es válido.";
+            exit;
+        }
+        switch($_POST["action"]){
+            case "add_product":{
+                $name=$_POST["name"];
+                $slug=$_POST["slug"];
+                $description=$_POST["description"];
+                $features=$_POST["features"];
+                $idBrand=$_POST["id_brand"];
+                $target_path = "/Applications/MAMP/htdocs/actividadesU4/uploads/"; 
+                $imagePath = $target_path . basename($_FILES['cover']['name']); 
+                if (isset($_FILES['cover']) && $_FILES['cover']['error'] === UPLOAD_ERR_OK) {
+                    if (move_uploaded_file($_FILES['cover']['tmp_name'], $imagePath)) {
+                    } else {
+                        echo "Ha ocurrido un error al mover el archivo.";
+                    }
+                } else {
+                    echo "No se ha subido ningún archivo o hubo un error en la subida.";
+                }
+                $productController= new controllerProducts();
+                $productController->postProduct($name,$slug,$description,$features,$idBrand,$imagePath);
+                break;
+                
+            }
+            case "update_product":{
+                if (isset($_GET["id"])){
+                    $id=$_GET["id"];
+                };
+                $name=$_POST["name"];
+                $slug=$_POST["slug"];
+                $description=$_POST["description"];
+                $features=$_POST["features"];
+                $productController= new controllerProducts();
+                $productController->updateProduct($id,$name,$slug,$description,$features);
+                break;
+            }
+            case "delete_product":{
+                $id=$_POST["id_product"];
+                
+                $productController= new controllerProducts();
+                $productController->delete($id);
+                break;
+            }
 
-	if (!isset($_SESSION['token'])) {
-		$_SESSION['token'] = 123;
-	}
+        }
+    };
+    class controllerProducts{
+    public function getProducts() {
 
-	if (isset($_POST['action'])) {
-		
-		switch ($_POST['action']) {
-			
-			case 'crear_producto':
-				
-				$name_var =  $_POST['name'];
-				$slug_var = $_POST['slug'];
-				$description_var = $_POST['description'];
-				$features_var = $_POST['features'];
+        $curl = curl_init();
 
-				$productsController = new ProductsController();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer '.$_SESSION['user_data']->token
+        ),
+        ));
 
-				$productsController->create($name_var,$slug_var,$description_var,$features_var);
+        $response = curl_exec($curl);
 
-			break; 
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+            curl_close($curl);
+            throw new Exception("Error en la solicitud: " . $error_msg);
+        }
 
-			case 'update_producto':
-				
-				$name_var =  $_POST['name'];
-				$slug_var = $_POST['slug'];
-				$description_var = $_POST['description'];
-				$features_var = $_POST['features'];
-				$product_id = $_POST['product_id'];
+        curl_close($curl);
+        $response = json_decode($response);
 
-				$productsController = new ProductsController();
+        if (isset($response->data) && is_array($response->data)) {
+            return $response->data;
+        }
 
-				$productsController->update($name_var,$slug_var,$description_var,$features_var,$product_id);
+        return [];
 
-			break; 
 
-			case 'delete_producto':
-				 
-				$product_id = $_POST['product_id'];
+        
+    }
+    public function getDetailProduct() {
 
-				$productsController = new ProductsController();
+        if (isset($_GET['slug'])) {
+            $id = $_GET['slug'];
+        } else {
+            throw new Exception("Slug no proporcionado.");
+        }
 
-				$productsController->delete($product_id);
+        $curl = curl_init();
 
-			break; 
-		}
-	}
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://crud.jonathansoto.mx/api/products/$id",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+        ),
+        ));
 
-/**
- * 
- */
-class ProductsController 
-{
-	
-	public function get()
-	{
-		$curl = curl_init();  
+        $response = curl_exec($curl);
+        $response=json_decode($response);
 
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products',
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => '',
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 0,
-		  CURLOPT_FOLLOWLOCATION => true,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => 'GET',
-		  CURLOPT_HTTPHEADER => array(
-		    'Authorization: Bearer '.$_SESSION['user_data']->token
-		  ),
-		));
+        if (empty($response)) {
+            throw new Exception("La respuesta está vacía. Verifica la conexión a la API.");
+        }
 
-		$response = curl_exec($curl);
-		curl_close($curl);  
-		$response = json_decode($response);
 
-		if (isset($response->code) && $response->code > 0) {
-			
-			return $response->data;
+        if (isset($response->data)) {
+            return $response->data; 
+        } else {
+            if (isset($response->message)) {
+                throw new Exception("Error de API: " . $response->message);
+            } else {
+                throw new Exception("No se encontraron datos para el producto.");
+            }
+        }
 
-		}else{
-			return [];
-		}
+        return [];
+        
+    }
 
-	}
+    public function postProduct($name,$slug,$description,$features,$idBrand,$imagePath){
+        $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array(
+                    'name' => $name,
+                    'slug' => $slug,
+                    'description' => $description,
+                    'features' => $features,
+                    'brand_id' => $idBrand,
+                    'cover' => new CURLFile($imagePath) // Asegúrate de usar CURLFile para archivos
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+                ),
+            ));
+            
+            // Ejecuta la solicitud cURL
+            $response = curl_exec($curl);
+            var_dump($response);
+            curl_close($curl);
+            $response = json_decode($response);
+            if (isset($response->code) && $response->code > 0) {
+                header("Location: ../products/");
+            } else {
+                header("Location: ../products?status=error");
+            }
+        
+    }
 
-	public function getBySlug($slug)
-	{
-		$curl = curl_init();  
+    public function updateProduct($id,$name,$slug,$description,$features){
+        $postFields = "name=" . urlencode($name) .
+                    "&slug=" . urlencode($slug) .
+                    "&description=" . urlencode($description) .
+                    "&features=" . urlencode($features) .
+                    "&id=" . urlencode($id);
+        $curl = curl_init();
 
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products/slug/'.$slug,
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => '',
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 0,
-		  CURLOPT_FOLLOWLOCATION => true,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => 'GET',
-		  CURLOPT_HTTPHEADER => array(
-		    'Authorization: Bearer '.$_SESSION['user_data']->token
-		  ),
-		));
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'PUT',
+        CURLOPT_POSTFIELDS => $postFields,
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded',
+            'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+        ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        $response=json_decode($response);
+        if(isset($response->code)&&$response->code > 0){
+            header("Location: ../products/");
+        }else{
+            header("Location: ../products?status=error");
+        }
+        
 
-		$response = curl_exec($curl);
-		curl_close($curl);  
-		$response = json_decode($response);
+    
+    }
 
-		if (isset($response->code) && $response->code > 0) {
-			
-			return $response->data;
+    public function delete($id){
+        $curl = curl_init();
 
-		}else{
-			return [];
-		}
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products/'.$id,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'DELETE',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+        ),
+        ));
 
-	}
+        $response = curl_exec($curl);
 
-	public function create($name_var,$slug_var,$description_var,$features_var)
-	{
-		
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products',
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => '',
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 0,
-		  CURLOPT_FOLLOWLOCATION => true,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => 'POST',
-		  CURLOPT_POSTFIELDS => array(
-		  	'name' => $name_var,
-		  	'slug' => $slug_var,
-		  	'description' => $description_var,
-		  	'features' => $features_var
-		  ),
-		  CURLOPT_HTTPHEADER => array(
-		    'Authorization: Bearer '.$_SESSION['user_data']->token
-		  ),
-		));
-
-		$response = curl_exec($curl); 
-		curl_close($curl);  
-		$response = json_decode($response);
-
-		if (isset($response->code) && $response->code > 0) {
-			
-			header("Location: ../home.php?status=ok");
-
-		}else{
-			
-			header("Location: ../home.php?status=error");
-		}
-	}
-
-	public function update($name_var,$slug_var,$description_var,$features_var,$product_id)
-	{
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products',
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => '',
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 0,
-		  CURLOPT_FOLLOWLOCATION => true,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => 'PUT',
-		  CURLOPT_POSTFIELDS => 'name='.$name_var.'&slug='.$slug_var.'&description='.$description_var.'&features='.$features_var.'&id='.$product_id,
-		  CURLOPT_HTTPHEADER => array(
-		    'Content-Type: application/x-www-form-urlencoded',
-		    'Authorization: Bearer '.$_SESSION['user_data']->token
-		  ),
-		));
-
-		$response = curl_exec($curl); 
-		curl_close($curl);  
-		$response = json_decode($response);
-
-		if (isset($response->code) && $response->code > 0) {
-			
-			header("Location: ../home.php?status=ok");
-
-		}else{
-			
-			header("Location: ../home.php?status=error");
-		}
-
-	}
-
-	public function delete($product_id)
-	{
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products/'.$product_id,
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => '',
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 0,
-		  CURLOPT_FOLLOWLOCATION => true,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => 'DELETE',
-		  CURLOPT_HTTPHEADER => array(
-		    'Authorization: Bearer '.$_SESSION['user_data']->token
-		  ),
-		));
-
-		$response = curl_exec($curl); 
-		curl_close($curl);  
-		$response = json_decode($response);
-
-		if (isset($response->code) && $response->code > 0) {
-			
-			header("Location: ../home.php?status=ok");
-
-		}else{
-			
-			header("Location: ../home.php?status=error");
-		}
-	}
+        curl_close($curl);
+        $response=json_decode($response);
+        if(isset($response->code)&&$response->code > 0){
+            header("Location: ../products/");
+        }else{
+            header("Location: ../products?status=error");
+        }
+    }
 }
+
 
 ?>
