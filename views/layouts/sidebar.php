@@ -67,7 +67,7 @@
           </a>
         </li>
         <li class="pc-item">
-          <a href="../widget/w_user.html" class="pc-link">
+          <a href="<?= BASE_PATH ?>users/details/1" class="pc-link">
             <span class="pc-micon">
               <i class="ph-duotone ph-identification-card"></i>
             </span>
