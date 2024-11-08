@@ -26,3 +26,5 @@
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="<?= BASE_PATH ?>assets/css/style.css" id="main-style-link" />
     <link rel="stylesheet" href="<?= BASE_PATH ?>assets/css/style-preset.css" />
+    <link rel="stylesheet" href="<?= BASE_PATH ?>assets/css/plugins/dropzone.min.css" />
+

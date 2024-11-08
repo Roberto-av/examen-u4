@@ -5,7 +5,7 @@
     <script src="<?= BASE_PATH ?>assets/js/fonts/custom-font.js"></script>
     <script src="<?= BASE_PATH ?>assets/js/pcoded.js"></script>
     <script src="<?= BASE_PATH ?>assets/js/plugins/feather.min.js"></script>
-
+    <script src="<?= BASE_PATH ?>assets/js/plugins/dropzone-amd-module.min.js"></script>
        
     <script>
       layout_change('light');
