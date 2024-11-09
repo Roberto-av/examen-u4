@@ -1,4 +1,5 @@
 <?php 
+include "config.php";
 	session_start();
 
 
@@ -58,9 +59,10 @@
 				$token = $this->token();
 				$_SESSION['user_data'] = $response->data;
 				$_SESSION['token'] = $token;
-				header("Location: ../home");
+				header("Location:".BASE_PATH. "home");
 			}else{
-				header("Location: ../index.php");
+				$_SESSION['error_message']= "Credenciales inválidas. Por favor, intenta de nuevo.";
+				header("Location: ".BASE_PATH);
 			}
 
 		}
