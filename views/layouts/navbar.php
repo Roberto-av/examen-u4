@@ -43,7 +43,7 @@
           </a>
           <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
             <div class="dropdown-header d-flex align-items-center justify-content-between">
-              <h5 class="m-0">Profile</h5>
+              <h5 class="m-0">Perfil</h5>
             </div>
             <div class="dropdown-body">
               <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 225px)">
@@ -54,14 +54,14 @@
                         <img src="<?= BASE_PATH ?>assets/images/user/avatar-2.jpg" alt="user-image" class="wid-50 rounded-circle" />
                       </div>
                       <div class="flex-grow-1 mx-3">
-                        <h5 class="mb-0">Roberto Antonio</h5>
-                        <a class="link-primary" href="mailto:carson.darrin@company.io">roberto@example.com</a>
+                        <h5 class="mb-0"><?= $_SESSION['user_data']->name ?></h5>
+                        <a class="link-primary" href="mailto:carson.darrin@company.io"><?= $_SESSION['user_data']->email ?></a>
                       </div>
                     </div>
                   </li>
                   <li class="list-group-item">
-                    <a href="<?= BASE_PATH ?>users/details/1" class="dropdown-item">
-                      <span class="d-flex align-items-center">
+                  <a href="<?= BASE_PATH ?>users/details/<?= $_SESSION['user_data']->id ?>" class="dropdown-item">
+                  <span class="d-flex align-items-center">
                         <i class="ph-duotone ph-user-circle"></i>
                         <span>Detalles de cuenta</span>
                       </span>
@@ -69,7 +69,7 @@
                     <div class="dropdown-item">
                       <span class="d-flex align-items-center">
                         <i class="ph-duotone ph-moon"></i>
-                        <span>Dark mode</span>
+                        <span>Modo oscuro</span>
                       </span>
                       <div class="form-check form-switch form-check-reverse m-0">
                         <input class="form-check-input f-18" id="dark-mode" type="checkbox" onclick="dark_mode()" role="switch" />
@@ -81,7 +81,7 @@
                         <form method="POST" action="auth" style="display: none;" id="logout-form">
                           <input type="hidden" name="action" value="logout">
                         </form>
-                        <span onclick="document.getElementById('logout-form').submit();">Logout</span>
+                        <span onclick="document.getElementById('logout-form').submit();">Cerrar Sesión</span>
                       </span>
                     </div>
                   </li>

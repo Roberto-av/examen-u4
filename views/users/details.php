@@ -1,7 +1,11 @@
 <?php
 
 include "../../app/config.php";
+require_once "../../app/UserController.php";
 
+
+$userController = new users();
+$user = $userController->getUser();
 ?>
 <!doctype html>
 <html lang="en">
@@ -50,15 +54,6 @@ include "../../app/config.php";
             <!-- [ Main Content ] start -->
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="d-sm-flex align-items-center mb-4">
-                        <div class="list-inline ms-auto my-1">
-                            <div class="list-inline-item">
-                                <button class="btn btn-outline-danger d-inline-flex" data-bs-toggle="modal" data-bs-target="#productModal">
-                                    <i class="ti ti-trash me-1"></i>Eliminar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-lg-5 col-xxl-3">
                             <div class="card overflow-hidden">
@@ -67,15 +62,15 @@ include "../../app/config.php";
                                         <div class="chat-avtar d-inline-flex mx-auto">
                                             <img
                                                 class="rounded-circle img-fluid wid-90 img-thumbnail"
-                                                src="<?= BASE_PATH ?>assets/images/user/avatar-1.jpg"
+                                                src="<?= $user->avatar ?>" alt="<?= htmlspecialchars(string: $user->name) ?>"
                                                 alt="User image" />
                                             <i class="chat-badge bg-success me-2 mb-2"></i>
                                         </div>
-                                        <h5 class="mb-0">William Bond</h5>
-                                        <p class="text-muted text-sm">Administrador</p>
+                                        <h5 class="mb-0"><?= $user->name ?></h5>
+                                        <p class="text-muted text-sm"><?= $user->role ?></p>
 
                                         <span class="mb-0">Creado por:</span>
-                                        <p class="text-muted text-sm">Admin</p>
+                                        <p class="text-muted text-sm"><?= $user->created_by ?></p>
                                     </div>
                                 </div>
                                 <div
@@ -121,24 +116,24 @@ include "../../app/config.php";
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <p class="mb-1 text-muted">Nombre</p>
-                                                            <p class="mb-0">Roberto Antonio</p>
+                                                            <p class="mb-0"><?= $user->name ?></p>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <p class="mb-1 text-muted">Apellidos</p>
-                                                            <p class="mb-0">Avilés Mendoza</p>
+                                                            <p class="mb-0"><?= $user->lastname ?></p>
                                                         </div>
                                                     </div>
                                                 </li>
                                                 <li class="list-group-item px-0">
                                                     <div class="">
-                                                        <p class="mb-1 text-muted">Phone</p>
-                                                        <p class="mb-0">612-123-2123</p>
+                                                        <p class="mb-1 text-muted">Numero de telefono</p>
+                                                        <p class="mb-0"><?= $user->phone_number ?: '-' ?></p>
                                                     </div>
                                                 </li>
                                                 <li class="list-group-item px-0">
                                                     <div class="">
                                                         <p class="mb-1 text-muted">Email</p>
-                                                        <p class="mb-0">roberto@example.com</p>
+                                                        <p class="mb-0"><?= $user->email ?></p>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -152,38 +147,50 @@ include "../../app/config.php";
                                         <h5>Editar Usuario</h5>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Nombre</label>
-                                                    <input type="text" class="form-control" value="Roberto Antonio" />
+                                        <form method="POST" action="../../user" enctype="multipart/form-data">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Nombre</label>
+                                                        <input type="text" class="form-control" name="name" value="<?= $user->name ?>" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Apellidos</label>
+                                                        <input type="text" class="form-control" name="lastname"  value="<?= $user->lastname ?>" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Rol</label>
+                                                        <input type="text" class="form-control" name="role"  value="<?= $user->role ?>" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Numero de telefono</label>
+                                                        <input type="text" class="form-control" name="phone_number"  value="<?= $user->phone_number ?>" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Email</label>
+                                                        <input type="text" class="form-control" name="email"  value="<?= $user->email ?>" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Apellidos</label>
-                                                    <input type="text" class="form-control" value="Avilés Mendoza" />
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Numero de telefono</label>
-                                                    <input type="text" class="form-control" value="612-123-2123" />
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Email</label>
-                                                    <input type="text" class="form-control" value="roberto@example.com" />
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="text-end btn-page">
-                                    <div class="btn btn-outline-secondary">Cancelar</div>
-                                    <div class="btn btn-primary">Actualizar Usuario</div>
+                                    <button class="btn btn-outline-secondary">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
                                 </div>
+                                <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+                                <input type="hidden" name="action" value="updateUser">
+                                <input type="hidden" name="id" value="<?= $user->id ?>" />
+                                </form>
                             </div>
                         </div>
                     </div>

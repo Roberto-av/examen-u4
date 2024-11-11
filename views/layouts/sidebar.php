@@ -39,11 +39,11 @@
           </a>
         </li>
         <li class="pc-item">
-          <a href="<?= BASE_PATH ?>users/details/1" class="pc-link">
+          <a href="<?= BASE_PATH ?>users/" class="pc-link">
             <span class="pc-micon">
               <i class="ph-duotone ph-user-circle"></i>
             </span>
-            <span class="pc-mtext">User</span>
+            <span class="pc-mtext">Users</span>
           </a>
         </li>
       </ul>

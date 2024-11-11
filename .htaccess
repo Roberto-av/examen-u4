@@ -12,6 +12,8 @@ RewriteRule ^products/details/([^\/]+)/?$ views/products/details.php?id=$1 [L]
 RewriteRule ^products/update/([^\/]+)/?$ views/products/update.php?id=$1 [L]
 
 #Usuarios
+RewriteRule ^users/?$ views/users/index.php 
+RewriteRule ^users/create/?$ views/users/create.php 
 RewriteRule ^users/details/([^\/]+)/?$ views/users/details.php?id=$1 [QSA,L]
 
 #authController
@@ -19,6 +21,9 @@ RewriteRule ^auth/?$ app/AuthController.php [L]
 
 #ProductController
 RewriteRule ^product/?$ app/ProductsController.php [NC,L]
+
+#ProductController
+RewriteRule ^user/?$ app/UserController.php [NC,L]
 
 
 
