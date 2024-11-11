@@ -1,6 +1,20 @@
 <?php
 
 include "../../app/config.php";
+require_once "../../app/ProductsController.php";
+require_once "../../app/BrandsController.php";
+
+$productController = new controllerProducts();
+$product = $productController->getDetailProduct();
+
+if (isset($product->brand_id) && !empty($product->brand_id)) {
+  $brandController = new BrandsController();
+  $_GET['id'] = $product->brand_id;
+  $marca = $brandController->getSpecificBrand();
+} else {
+  $marca = (object) ['name' => 'Marca no disponible'];
+}
+
 
 ?>
 <!doctype html>
@@ -41,13 +55,21 @@ include "../../app/config.php";
             </div>
             <div class="col-md-12">
               <div class="page-header-title">
-                <h2 class="mb-0">Products</h2>
+                <h2 class="mb-0">Detalle de producto</h2>
               </div>
             </div>
           </div>
         </div>
       </div>
       <!-- [ breadcrumb ] end -->
+
+
+      <?php
+      if (isset($_SESSION['error_message'])) {
+        echo '<div class="alert alert-danger">' . $_SESSION['error_message'] . '</div>';
+        unset($_SESSION['error_message']);
+      }
+      ?>
 
 
       <!-- [ Main Content ] start -->
@@ -57,7 +79,7 @@ include "../../app/config.php";
           <div class="d-sm-flex align-items-center mb-4">
             <div class="list-inline ms-auto my-1">
               <div class="list-inline-item">
-                <a href="<?= BASE_PATH ?>products/update/1" class="btn btn-outline-warning d-inline-flex me-2">
+                <a href="<?= BASE_PATH ?>products/update/<?= $product->id ?>" class="btn btn-outline-warning d-inline-flex me-2">
                   <i class="ti ti-edit me-1"></i>Actualizar Producto
                 </a>
                 <button class="btn btn-outline-danger d-inline-flex" data-bs-toggle="modal" data-bs-target="#productModal">
@@ -93,7 +115,7 @@ include "../../app/config.php";
                           </ul>
                         </div>
                         <div class="carousel-item active">
-                          <img src="<?= BASE_PATH ?>assets/images/application/img-prod-1.jpg" class="d-block w-100" alt="Product images" />
+                          <img src="<?= $product->cover ?>" alt="<?= htmlspecialchars(string: $product->name) ?>" class="img-prod img-fluid" />
                         </div>
                       </div>
 
@@ -101,31 +123,44 @@ include "../../app/config.php";
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <span class="badge bg-success f-14">In stock</span>
-                  <h5 class="my-3">Apple Watch SE Smartwatch (GPS, 40mm) (Heart Rate Monitoring)</h5>
-                  <h5 class="mt-4 mb-sm-3 mb-2 f-w-500">Sobre este producto</h5>
-                  <p>Reemplaza tu antigua estufa por una elegante y moderna, elige esta de piso de la marca Whirlpool, la cual tiene un tamaño de 30</p>
-                  <div id="categories-container" class="d-flex flex-wrap gap-1 mb-3">
-                    <a href="#" class="text-decoration-none">
-                      <span class="badge text-bg-dark">Hogar</span>
-                    </a>
-                    <a href="#" class="text-decoration-none">
-                      <span class="badge text-bg-dark">Estufas</span>
-                    </a>
-                  </div>
-                  <h3 class="mb-4"><b>$299.00</b><span class="mx-2 f-16 text-muted f-w-400 text-decoration-line-through">$399.00</span></h3>
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="d-grid">
-                        <button type="button" class="btn btn-primary">Buy Now</button>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="d-grid">
-                        <button type="button" class="btn btn-outline-secondary">Add to cart</button>
-                      </div>
+                  <h3 class="my-3"><?= $product->name ?></h3>
+                  <?php if (isset($product->presentations[0]->stock) && $product->presentations[0]->stock > 0) : ?>
+                    <span class="badge bg-success f-14">Con stock disponible (<?= $product->presentations[0]->stock ?>)</span>
+                  <?php else : ?>
+                    <span class="badge bg-danger f-14">Sin stock</span>
+                  <?php endif; ?>
+                  <p class="mt-4 mb-sm-3 mb-2 fs-5 f-w-300">Sobre este producto</p>
+                  <p><?= $product->description ?></p>
+
+                  <div id="categories-container" class="mb-3">
+                    <p class="mb-2">Categorias</p>
+                    <div class="d-flex flex-wrap gap-1">
+                      <?php foreach ($product->categories as $category) : ?>
+                        <a href="#" class="text-decoration-none">
+                          <span class="badge rounded-pill text-bg-secondary"><?= htmlspecialchars($category->name) ?></span>
+                        </a>
+                      <?php endforeach; ?>
                     </div>
                   </div>
+
+                  <div id="categories-container" class="mb-3">
+                    <p class="mb-2">Tags</p>
+                    <div class="d-flex flex-wrap gap-1">
+                      <?php foreach ($product->tags as $tag) : ?>
+                        <a href="#" class="text-decoration-none">
+                          <span class="badge rounded-pill text-bg-dark"><?= htmlspecialchars($tag->name) ?></span>
+                        </a>
+                      <?php endforeach; ?>
+                    </div>
+                  </div>
+
+
+                  <?php if (!empty($product->presentations[0]->price)) : ?>
+                    <h3 class="mb-4">
+                      <b>$<?= number_format($product->presentations[0]->price[0]->amount, 2) ?>
+                    </h3>
+                  <?php endif; ?>
+
                 </div>
               </div>
             </div>
@@ -141,7 +176,7 @@ include "../../app/config.php";
                     href="#ecomtab-1"
                     role="tab"
                     aria-controls="ecomtab-1"
-                    aria-selected="true">Features
+                    aria-selected="true">Características
                   </a>
                 </li>
               </ul>
@@ -154,15 +189,51 @@ include "../../app/config.php";
                       <tbody>
                         <tr>
                           <td class="text-muted py-1">Marca :</td>
-                          <td class="py-1">Whirlpool</td>
+                          <td class="py-1"><?= $marca->name ?></td>
                         </tr>
                         <tr>
                           <td class="text-muted py-1">Tags :</td>
-                          <td class="py-1">Hogar | Estufas | Cocina</td>
+                          <td class="py-1">
+                            <?php
+                            if (isset($product->tags) && !empty($product->tags)) :
+                              $tags = array_map(function ($tag) {
+                                return htmlspecialchars($tag->name);
+                              }, $product->tags);
+
+                              echo implode(' | ', $tags);
+                            else :
+                              echo 'No disponible';
+                            endif;
+                            ?>
+                          </td>
                         </tr>
                         <tr>
                           <td class="text-muted py-1">Categorias :</td>
-                          <td class="py-1">Línea blanca | Cocina y Electrodomésticos</td>
+                          <td class="py-1">
+                            <?php
+                            if (isset($product->categories) && !empty($product->categories)) :
+                              $categories = array_map(function ($category) {
+                                return htmlspecialchars($category->name);
+                              }, $product->categories);
+
+                              echo implode(' | ', $categories);
+                            else :
+                              echo 'No disponible';
+                            endif;
+                            ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Peso :</td>
+                          <td class="py-1"><?= isset($product->presentations[0]->weight_in_grams) ? $product->presentations[0]->weight_in_grams . ' g' : 'No disponible' ?></td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Codigo :</td>
+                          <td class="py-1"><?= isset($product->presentations[0]->code) ? $product->presentations[0]->code : 'No disponible' ?></td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Status :</td>
+                          <td class="py-1"><?= isset($product->presentations[0]->status) ? $product->presentations[0]->status : 'No disponible' ?></td>
                         </tr>
                       </tbody>
                     </table>
@@ -231,11 +302,16 @@ include "../../app/config.php";
           <h5 class="modal-title" id="exampleModalCenterTitle">Eliminar Producto</h5>
         </div>
         <div class="modal-body">
-          <p>¿Seguro que deseas elimar el producto?</p>
+          <p>¿Seguro que deseas eliminar el producto?</p>
         </div>
         <div class="modal-footer">
+          <form method="POST" action="../../product">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+            <input type="hidden" name="action" value="delete_product">
+              <input type="hidden" name="id_product" value="<?= $product->id ?>" />
+          </form>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-danger">Eliminar</button>
         </div>
       </div>
     </div>
@@ -248,6 +324,5 @@ include "../../app/config.php";
 
   <?php include "../layouts/modals.php" ?>
 </body>
-<!-- [Body] end -->undefined
 
 </html>

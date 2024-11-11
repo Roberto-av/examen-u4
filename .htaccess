@@ -8,14 +8,18 @@ RewriteRule ^home/?$ views/home.php
 #Productos
 RewriteRule ^products/?$ views/products/index.php 
 RewriteRule ^products/create/?$ views/products/create.php 
-RewriteRule ^products/details/([^\/]+)/?$ views/products/details.php?slug=$1 [L]
-RewriteRule ^products/update/([^\/]+)/?$ views/products/update.php?slug=$1 [L]
+RewriteRule ^products/details/([^\/]+)/?$ views/products/details.php?id=$1 [L]
+RewriteRule ^products/update/([^\/]+)/?$ views/products/update.php?id=$1 [L]
 
 #Usuarios
 RewriteRule ^users/details/([^\/]+)/?$ views/users/details.php?id=$1 [QSA,L]
 
 #authController
 RewriteRule ^auth/?$ app/AuthController.php [L]
+
+#ProductController
+RewriteRule ^product/?$ app/ProductsController.php [NC,L]
+
 
 
 #RewriteCond %{REQUEST_URI} ^\/404/$

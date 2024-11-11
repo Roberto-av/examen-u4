@@ -1,7 +1,21 @@
 <?php
-
 include "../../app/config.php";
+require_once "../../app/BrandsController.php";
+require_once "../../app/TagsController.php";
+require_once "../../app/CategoriesController.php";
+require_once "../../app/ProductsController.php";
 
+$brandController = new BrandsController();
+$marcas = $brandController->getAllBrands();
+
+$productController = new controllerProducts();
+$product = $productController->getDetailProduct();
+
+$tagController = new tagsCrontoller();
+$tags = $tagController->getAllTags();
+
+$categoryController = new categoriesController();
+$categories = $categoryController->getAllCategories();
 ?>
 <!doctype html>
 <html lang="en">
@@ -54,79 +68,110 @@ include "../../app/config.php";
               <h5>Detalles Producto</h5>
             </div>
             <div class="card-body row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" class="form-control" value="Tenis" placeholder="Enter Product Name" />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">slug</label>
-                <input type="text" class="form-control" value="Tenis"  placeholder="Enter Product Name" />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Marca</label>
-                <select class="form-select">
-                  <option>Nike</option>
-                  <option>Category 1</option>
-                  <option>Category 2</option>
-                  <option>Category 3</option>
-                  <option>Category 4</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Categorias</label>
-                <select class="form-select">
-                  <option>Sneakers</option>
-                  <option>Category 1</option>
-                  <option>Category 2</option>
-                  <option>Category 3</option>
-                  <option>Category 4</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Tags</label>
-                <select class="form-select">
-                  <option>Hogar</option>
-                  <option>Category 1</option>
-                  <option>Category 2</option>
-                  <option>Category 3</option>
-                  <option>Category 4</option>
-                </select>
-              </div>
-              <div class="mb-0">
-                <label class="form-label">Descripción</label>
-                <textarea class="form-control" value="Tenis"  placeholder="Enter Product Description"></textarea>
-              </div>
-              <div class="mb-0 mt-2">
-                <label class="form-label">features</label>
-                <textarea class="form-control" value="Tenis"  placeholder="Enter Product Description"></textarea>
-              </div>
-              <div class="mb-0 card-body">
-                <label class="form-label">Subir imagen</label>
-                <form action="<?= BASE_PATH ?>assets/json/file-upload.php" class="dropzone" id="my-dropzone" enctype="multipart/form-data">
-                  <div class="dz-default dz-message">
-                    <button class="dz-button" type="button">Suelta las imagenes aqui</button>
+              <form method="POST" action="../../product" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="name" value="<?= $product->name ?>" placeholder="Ingrese el nombre del producto" />
                   </div>
-                </form>
-                <div class="text-center m-t-20">
-                  <button id="uploadButton" class="btn btn-primary">Upload Now</button>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Slug</label>
+                    <input type="text" class="form-control" name="slug" value="<?= $product->slug ?>" placeholder="Ingrese el slug del producto" />
+                  </div>
                 </div>
-              </div>
+                <div class="mb-3">
+                  <label for="brand" class="form-label">Marcas</label>
+                  <select id="brand" class="form-select" name="id_brand">
+                    <option value="" selected disabled>Seleccione una marca</option>
+                    <?php if (isset($marcas) && count($marcas)): ?>
+                      <?php foreach ($marcas as $marca_option): ?>
+                        <option value="<?= $marca_option->id ?>"
+                          <?php if (isset($product->brand_id) && $product->brand_id == $marca_option->id): ?>selected<?php endif; ?>>
+                          <?= $marca_option->name ?>
+                        </option>
+                      <?php endforeach ?>
+                    <?php endif ?>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="categories-multiple-select" class="form-label">Categorías</label>
+                  <select id="categories-multiple-select" name="categories[]" class="form-select" multiple>
+                    <?php if (isset($categories) && count($categories)): ?>
+                      <?php foreach ($categories as $category): ?>
+                        <option value="<?= $category->id ?>"
+                          <?php if (isset($product->categories) && in_array($category->id, array_column($product->categories, 'id'))): ?>selected<?php endif; ?>>
+                          <?= $category->name ?>
+                        </option>
+                      <?php endforeach ?>
+                    <?php endif ?>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Tags</label>
+                  <select id="tags-multiple-select" name="tags[]" class="form-control" multiple>
+                    <?php if (isset($tags) && count($tags)): ?>
+                      <?php foreach ($tags as $tag): ?>
+                        <option value="<?= $tag->id ?>"
+                          <?php if (isset($product->tags) && in_array($tag->id, array_column($product->tags, 'id'))): ?>selected<?php endif; ?>>
+                          <?= $tag->name ?>
+                        </option>
+                      <?php endforeach ?>
+                    <?php endif ?>
+                  </select>
+                </div>
+                <div class="mb-0">
+                  <label class="form-label">Descripción</label>
+                  <textarea class="form-control" name="description" placeholder="Ingrese la descripción del producto"><?= htmlspecialchars($product->description) ?></textarea>
+                </div>
+                <div class="mb-0 mt-2">
+                  <label class="form-label">Características</label>
+                  <textarea class="form-control" name="features" placeholder="Ingrese las características del producto"><?= htmlspecialchars($product->features) ?></textarea>
+                </div>
+                <div class="mb-0 mt-2">
+                  <label class="form-label">Subir imagen</label>
+                  <input type="file" name="cover" class="form-control" />
+                </div>
             </div>
           </div>
         </div>
         <div class="col-sm-12">
           <div class="card">
             <div class="card-body text-end btn-page">
-              <button class="btn btn-primary mb-0">Save product</button>
-              <button class="btn btn-outline-secondary mb-0">Reset</button>
+              <button type="reset" class="btn btn-outline-secondary mb-0">Vaciar datos</button>
+              <button type="submit" class="btn btn-primary mb-0">Guardar producto</button>
             </div>
           </div>
         </div>
+        <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+        <input type="hidden" name="action" value="update_product">
+        <input type="hidden" name="id" value="<?= $product->id ?>" />
+        </form>
         <!-- [ sample-page ] end -->
       </div>
       <!-- [ Main Content ] end -->
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const categoriesSelect = document.getElementById('categories-multiple-select');
+      new Choices(categoriesSelect, {
+        removeItemButton: true,
+        placeholderValue: 'Selecciona las categorías',
+        searchPlaceholderValue: 'Buscar categoría',
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const tagsSelect = document.getElementById('tags-multiple-select');
+      new Choices(tagsSelect, {
+        removeItemButton: true,
+        placeholderValue: 'Selecciona los tags',
+        searchPlaceholderValue: 'Buscar tag',
+      });
+    });
+  </script>
 
   <?php include "../layouts/footer.php" ?>
 

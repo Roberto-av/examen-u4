@@ -1,5 +1,4 @@
 <?php
-session_start();
 include "app/config.php";
 ?>
 <!doctype html>
@@ -33,10 +32,10 @@ include "app/config.php";
             <div class="card-body">
               <h4 class="f-w-500 mb-2 text-center">Iniciar Sesión</h4>
               <?php
-                if (isset($_SESSION['error_message'])) {
-                    echo '<div id="error-message" class="alert alert-danger">' . $_SESSION['error_message'] . '</div>';
-                    unset($_SESSION['error_message']);
-                }
+              if (isset($_SESSION['error_message'])) {
+                echo '<div id="error-message" class="alert alert-danger">' . $_SESSION['error_message'] . '</div>';
+                unset($_SESSION['error_message']);
+              }
               ?>
               <form method="POST" action="auth">
                 <div class="mb-2">
@@ -75,6 +74,9 @@ include "app/config.php";
     };
   </script>
 
+  <?php include "../layouts/footer.php" ?>
+  <?php include "../layouts/scripts.php" ?>
+  <?php include "../layouts/modals.php" ?>
 </body>
 
 </html>

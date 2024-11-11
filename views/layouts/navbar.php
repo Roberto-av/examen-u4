@@ -1,5 +1,5 @@
 <!-- [ Header Topbar ] start -->
-<header class="pc-header">
+<header class="pc-header sticky-top">
   <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
     <div class="me-auto pc-mob-drp">
       <ul class="list-unstyled">
