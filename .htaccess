@@ -16,6 +16,15 @@ RewriteRule ^users/?$ views/users/index.php
 RewriteRule ^users/create/?$ views/users/create.php 
 RewriteRule ^users/details/([^\/]+)/?$ views/users/details.php?id=$1 [QSA,L]
 
+#Categorias
+RewriteRule ^categories/?$ views/categories/index.php 
+
+#marca
+RewriteRule ^brands/?$ views/brands/index.php 
+
+#tags
+RewriteRule ^tags/?$ views/tags/index.php 
+
 #authController
 RewriteRule ^auth/?$ app/AuthController.php [L]
 
@@ -24,6 +33,15 @@ RewriteRule ^product/?$ app/ProductsController.php [NC,L]
 
 #ProductController
 RewriteRule ^user/?$ app/UserController.php [NC,L]
+
+#CategoriesController
+RewriteRule ^category/?$ app/CategoriesController.php [NC,L]
+
+#BrandsController
+RewriteRule ^brand/?$ app/BrandsController.php [NC,L]
+
+#TagsController
+RewriteRule ^tag/?$ app/TagsController.php [NC,L]
 
 
 
