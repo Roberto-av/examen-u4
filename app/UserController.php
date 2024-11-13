@@ -1,6 +1,7 @@
 <?php
-    session_start();
-    
+include_once "config.php";
+
+   
     if (isset($_POST['action'])) {
 		
         switch ($_POST['action']) {
@@ -8,23 +9,17 @@
             case 'addUser':
                 $name=$_POST["name"];
                 $lastName=$_POST["lastname"];
-                $phone=$_POST["phone"];
-                $rol=$_POST["rol"];
+                $phone=$_POST["phone_number"];
+                $rol=$_POST["role"];
                 $email=$_POST["email"];
                 $password=$_POST["password"];
-                $createdBy="jesus alberto";
-                $target_path = "/Applications/MAMP/htdocs/examen-u4/assets/images"; 
-                $imagePath = $target_path . basename($_FILES['profile_photo_file']['name']); 
-                if (isset($_FILES['profile_photo_file']) && $_FILES['profile_photo_file']['error'] === UPLOAD_ERR_OK) {
-                    if (move_uploaded_file($_FILES['profile_photo_file']['tmp_name'], $imagePath)) {
-                    } else {
-                        echo "Ha ocurrido un error al mover el archivo.";
-                    }
-                } else {
-                    echo "No se ha subido ningún archivo o hubo un error en la subida.";
-                }
+                $createdBy= $_POST["created_by"];
+                $tmp_name = $_FILES['profile_photo_file']['tmp_name']; 
+                $original_name = $_FILES['profile_photo_file']['name']; 
+                $mime_type = $_FILES['profile_photo_file']['type']; 
+                $imagePath = new CURLFile($tmp_name, $mime_type, $original_name);
                 $productController= new users();
-                $productController->addUser($name,$lastName,$description,$email,$password,$createdBy,$imagePath);
+                $productController->addUser($name,$rol,$lastName,$description,$email,$phone,$password,$createdBy,$imagePath);
                 break;
 
             case "deleteUser":
@@ -34,15 +29,12 @@
                 break;
                 
             case "updateUser":
-                if (isset($_GET["id"])){
-                    $id=$_GET["id"];
-                };
+                $id=$_POST["id"];
                 $name=$_POST["name"];
                 $lastName=$_POST["lastname"];
                 $phone=$_POST["phone_number"];
                 $rol=$_POST["role"];
                 $email=$_POST["email"];
-
                 $controller= new users();
                 $controller->updateUser($name,$lastName,$phone,$rol,$email,$id);
                 break;
@@ -65,18 +57,14 @@
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
-				'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
-
-                // 'Authorization: Bearer '.$_SESSION['user_data']->token
+                'Authorization: Bearer '.$_SESSION['user_data']->token
 
             ),
             ));
 
             $response = curl_exec($curl);
-
             curl_close($curl);
             $response=json_decode($response);
-
             if(isset($response->data)){
                 echo "entre";
                 return $response->data;
@@ -119,14 +107,16 @@
                 // if($response->data->email==$_SESSION['user_data']->email){
                     return $response->data;
                 }else{
-                    header("Location: ../views/products?status=corre_incorrecto");
+                    $_SESSION['error_message'] = "Error al obtener usuarios";
+				    header("Location: ".BASE_PATH."users/");
+                    
                 
             }
             
             
         }
 
-        public function addUser($name,$lastName,$phone,$email,$password,$createdBy,$imagePath){
+        public function addUser($name,$rol,$lastName,$description,$email,$phone,$password,$createdBy,$imagePath){
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -146,10 +136,11 @@
                 'created_by' => $createdBy,
                 'role' => $rol,
                 'password' => $password,
-                'profile_photo_file'=> new CURLFILE($imagePath)
+                'profile_photo_file'=> $imagePath
             ),
             CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                'Authorization: Bearer '.$_SESSION['user_data']->token
+
             ),
             ));
 
@@ -158,12 +149,12 @@
             curl_close($curl);
             $response=json_decode($response);
             if (isset($response->data)) {
-				
-				header("Location: index.php");
+				$_SESSION['success_message'] = "usuario agregado con éxito";
+				header("Location: ".BASE_PATH."users/");
 			}else{
-				header("Location: .index.php?status=error");
+                $_SESSION['error_message'] = "Error al agregar usuario";
+				header("Location: ".BASE_PATH."users/");
 			}
-
         }
         public function deleteUser($id){
             $curl = curl_init();
@@ -178,7 +169,8 @@
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'DELETE',
             CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                'Authorization: Bearer '.$_SESSION['user_data']->token
+
             ),
             ));
 
@@ -187,19 +179,20 @@
             curl_close($curl);
             $response=json_decode($response);
             if (isset($response->data)) {
-				
-				header("Location: ../pruebas-back/index.php");
+				$_SESSION['success_message'] = "usuario eliminado con éxito";
+				header("Location: ".BASE_PATH."users/");
 			}else{
-				header("Location: ../pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al eliminar usuario";
+				header("Location: ".BASE_PATH."users/");
 			}
             
         }
 
         public function updateUser($name,$lastName,$phone,$rol,$email,$id) {
             $postFields = "name=" . urlencode($name) .
-                    "&lastname=" . urlencode($lastname) .
+                    "&lastname=" . urlencode($lastName) .
                     "&email=" . urlencode($email) .
-                    "&phone_number=" . urlencode($phone_number) .
+                    "&phone_number=" . urlencode($phone) .
                     "&role=" . urlencode($rol) .
                     "&id=" . urlencode($id);
             $curl = curl_init();
@@ -216,7 +209,8 @@
             CURLOPT_POSTFIELDS => $postFields,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/x-www-form-urlencoded',
-                'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                'Authorization: Bearer '.$_SESSION['user_data']->token
+
 
             ),
             ));
@@ -227,10 +221,11 @@
             $response=json_decode($response);
             var_dump($response);
             if (isset($response->data)) {
-				
-				header("Location: ../pruebas-back/index.php");
+				$_SESSION['success_message'] = "usuario actualizado con éxito";
+				header("Location: ".BASE_PATH."users/");
 			}else{
-				header("Location: ../pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al actualizado usuario";
+				header("Location: ".BASE_PATH."users/");
 			}
 
             
