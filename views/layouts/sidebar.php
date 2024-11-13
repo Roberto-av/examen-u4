@@ -46,6 +46,14 @@
             <span class="pc-mtext">Users</span>
           </a>
         </li>
+        <li class="pc-item">
+          <a href="<?= BASE_PATH ?>clients/" class="pc-link">
+            <span class="pc-micon">
+              <i class="ph-duotone ph-user-circle"></i>
+            </span>
+            <span class="pc-mtext">Clientes</span>
+          </a>
+        </li>
         <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link">
             <span class="pc-micon">
