@@ -1,6 +1,5 @@
 <?php 
-
-session_start();
+include_once "config.php";
 var_dump($_POST);
     if(isset($_POST["action"])){
         // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
@@ -18,9 +17,7 @@ var_dump($_POST);
                 
             }
             case "update_tag":{
-                if (isset($_GET["id"])){
-                    $id=$_GET["id"];
-                };
+                $id=$_POST["id"];
                 $name=$_POST["name"];
                 $slug=$_POST["slug"];
                 $description=$_POST["description"];
@@ -133,11 +130,13 @@ class tagsCrontoller {
 		
 		curl_close($curl);
 		$response = json_decode($response);
-		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../pruebas-back/actualizar.php?status=error");
-		}
+		if (isset($response->data)) {
+            $_SESSION['success_message'] = "etiqueta agregada con éxito";
+            header("Location: ".BASE_PATH."tags/");
+        }else{
+            $_SESSION['error_message'] = "Error al agregar la etiqueta";
+            header("Location: ".BASE_PATH."tags/");
+        }
 	}
 
 	public function updateTag($id,$name,$slug,$description){
@@ -170,11 +169,13 @@ class tagsCrontoller {
         var_dump($response);
         curl_close($curl);
 		$response = json_decode($response);
-		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../pruebas-back/actualizar.php?id=".$id);
-		}
+		if (isset($response->data)) {
+            $_SESSION['success_message'] = "etiqueta actualizada con éxito";
+            header("Location: ".BASE_PATH."tags/");
+        }else{
+            $_SESSION['error_message'] = "Error al actualizar la etiqueta";
+            header("Location: ".BASE_PATH."tags/");
+        }
 		
 	}
 
@@ -200,11 +201,13 @@ class tagsCrontoller {
 
         curl_close($curl);
 		$response = json_decode($response);
-		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../index.php?status=error");
-		}
+		if (isset($response->data)) {
+            $_SESSION['success_message'] = "etiqueta eliminada con éxito";
+            header("Location: ".BASE_PATH."tags/");
+        }else{
+            $_SESSION['error_message'] = "Error al aliminar la etiqueta";
+            header("Location: ".BASE_PATH."tags/");
+        }
 	}
 }
 

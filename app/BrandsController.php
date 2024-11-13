@@ -1,6 +1,5 @@
 <?php 
-
-session_start();
+include_once "config.php";
 var_dump($_POST);
     if(isset($_POST["action"])){
         // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
@@ -18,9 +17,7 @@ var_dump($_POST);
                 
             }
             case "update_brand":{
-                if (isset($_GET["id"])){
-                    $id=$_GET["id"];
-                };
+                $id=$_POST["id"];
                 $name=$_POST["name"];
                 $slug=$_POST["slug"];
                 $description=$_POST["description"];
@@ -132,11 +129,13 @@ class BrandsController {
 		
 		curl_close($curl);
 		$response = json_decode($response);
-		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../index.php?status=error");
-		}
+		if (isset($response->data)) {
+            $_SESSION['success_message'] = "marca agregada con éxito";
+            header("Location: ".BASE_PATH."brands/");
+        }else{
+            $_SESSION['error_message'] = "Error al agregar la marca";
+            header("Location: ".BASE_PATH."brands/");
+        }
 	}
 
 	public function updateBrand($id,$name,$slug,$description){
@@ -171,11 +170,13 @@ class BrandsController {
 		
 		curl_close($curl);
 		$response = json_decode($response);
-		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../index.php?status=error");
-		}
+		if (isset($response->data)) {
+            $_SESSION['success_message'] = "marca actualizada con éxito";
+            header("Location: ".BASE_PATH."brands/");
+        }else{
+            $_SESSION['error_message'] = "Error al actualizar la marca";
+            header("Location: ".BASE_PATH."brands/");
+        }
 		
 	}
 
@@ -201,11 +202,13 @@ class BrandsController {
 
 		curl_close($curl);
 		$response = json_decode($response);
-		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../index.php?status=error");
-		}
+		if (isset($response->data)) {
+            $_SESSION['success_message'] = "marca elimindada con éxito";
+            header("Location: ".BASE_PATH."brands/");
+        }else{
+            $_SESSION['error_message'] = "Error al eliminar la marca";
+            header("Location: ".BASE_PATH."brands/");
+        }
 	}
 }
 
