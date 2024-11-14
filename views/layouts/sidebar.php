@@ -68,6 +68,14 @@
             <li class="pc-item"><a class="pc-link" href="<?= BASE_PATH ?>tags/">Etiquetas</a></li>
           </ul>
         </li>
+        <li class="pc-item">
+          <a href="<?= BASE_PATH ?>coupons/" class="pc-link">
+            <span class="pc-micon">
+              <i class="ph-duotone ph-gift"></i>
+            </span>
+            <span class="pc-mtext">Cupones</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="card pc-user-card">

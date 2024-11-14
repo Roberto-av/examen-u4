@@ -22,6 +22,12 @@ RewriteRule ^clients/create/?$ views/clients/create.php
 RewriteRule ^clients/details/([^\/]+)/?$ views/clients/details.php?id=$1 [L]
 RewriteRule ^clients/update/([^\/]+)/?$ views/clients/update.php?id=$1 [L]
 
+#Clientes
+RewriteRule ^coupons/?$ views/coupons/index.php 
+RewriteRule ^coupons/create/?$ views/coupons/create.php 
+RewriteRule ^coupons/details/([^\/]+)/?$ views/coupons/details.php?id=$1 [L]
+RewriteRule ^coupons/update/([^\/]+)/?$ views/coupons/update.php?id=$1 [L]
+
 #Categorias
 RewriteRule ^categories/?$ views/categories/index.php 
 
@@ -51,6 +57,9 @@ RewriteRule ^tag/?$ app/TagsController.php [NC,L]
 
 #TagsController
 RewriteRule ^client/?$ app/ClientController.php [NC,L]
+
+#CuponsController
+RewriteRule ^coupon/?$ app/CuponsController.php [NC,L]
 
 
 
