@@ -1,10 +1,10 @@
 <?php
-    session_start();
+    include_once "config.php";
     if(isset($_POST["action"])){
-        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-            echo "Error: El token no es válido.";
-            exit;
-        }
+        // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+        //     echo "Error: El token no es válido.";
+        //     exit;
+        // }
         switch($_POST["action"]){
             case "add_product":{
                 $name=$_POST["name"];
@@ -12,31 +12,53 @@
                 $description=$_POST["description"];
                 $features=$_POST["features"];
                 $idBrand=$_POST["id_brand"];
-                $target_path = "/Applications/MAMP/htdocs/actividadesU4/uploads/"; 
-                $imagePath = $target_path . basename($_FILES['cover']['name']); 
-                if (isset($_FILES['cover']) && $_FILES['cover']['error'] === UPLOAD_ERR_OK) {
-                    if (move_uploaded_file($_FILES['cover']['tmp_name'], $imagePath)) {
-                    } else {
-                        echo "Ha ocurrido un error al mover el archivo.";
+                $tmp_name = $_FILES['cover']['tmp_name']; 
+                $original_name = $_FILES['cover']['name']; 
+                $mime_type = $_FILES['cover']['type'];
+                $imagePath = new CURLFile($tmp_name, $mime_type, $original_name);
+                $categories = [];
+                if (isset($_POST['categories'])) {
+                    foreach ($_POST['categories'] as $key => $category) {
+                        $categories[] = $category;  
                     }
-                } else {
-                    echo "No se ha subido ningún archivo o hubo un error en la subida.";
                 }
+                $tags = [];
+                if (isset($_POST['tags'])) {
+                    foreach ($_POST['tags'] as $key => $tag) {
+                        $tags[] = $tag; 
+                    }
+                }
+
+                
                 $productController= new controllerProducts();
-                $productController->postProduct($name,$slug,$description,$features,$idBrand,$imagePath);
+                $productController->postProduct($name,$slug,$description,$features,$idBrand,$imagePath,$categories,$tags);
                 break;
                 
             }
             case "update_product":{
-                if (isset($_GET["id"])){
-                    $id=$_GET["id"];
-                };
+                $id=$_POST["id"];
                 $name=$_POST["name"];
                 $slug=$_POST["slug"];
                 $description=$_POST["description"];
                 $features=$_POST["features"];
+                $tmp_name = $_FILES['cover']['tmp_name']; 
+                $original_name = $_FILES['cover']['name']; 
+                $mime_type = $_FILES['cover']['type'];
+                $imagePath = new CURLFile($tmp_name, $mime_type, $original_name);
+                $categories = [];
+                if (isset($_POST['categories'])) {
+                    foreach ($_POST['categories'] as $key => $category) {
+                        $categories[] = $category;  
+                    }
+                }
+                $tags = [];
+                if (isset($_POST['tags'])) {
+                    foreach ($_POST['tags'] as $key => $tag) {
+                        $tags[] = $tag; 
+                    }
+                }
                 $productController= new controllerProducts();
-                $productController->updateProduct($id,$name,$slug,$description,$features);
+                $productController->updateProduct($id,$name,$slug,$description,$features,$categories,$tags);
                 break;
             }
             case "delete_product":{
@@ -90,8 +112,8 @@
     }
     public function getDetailProduct() {
 
-        if (isset($_GET['slug'])) {
-            $id = $_GET['slug'];
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
         } else {
             throw new Exception("Slug no proporcionado.");
         }
@@ -134,7 +156,23 @@
         
     }
 
-    public function postProduct($name,$slug,$description,$features,$idBrand,$imagePath){
+    public function postProduct($name,$slug,$description,$features,$idBrand,$imagePath,$categories,$tags){
+
+        $postfields = array(
+            'name' => $name,
+            'slug' => $slug,
+            'description' => $description,
+            'features' => $features,
+            'brand_id' => $idBrand,
+            'cover' => $imagePath 
+        );
+        foreach ($categories as $key => $category) {
+            $postfields["categories[$key]"] = $category;
+        }
+        
+        foreach ($tags as $key => $tag) {
+            $postfields["tags[$key]"] = $tag;
+        }
         $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://crud.jonathansoto.mx/api/products',
@@ -145,16 +183,9 @@
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array(
-                    'name' => $name,
-                    'slug' => $slug,
-                    'description' => $description,
-                    'features' => $features,
-                    'brand_id' => $idBrand,
-                    'cover' => new CURLFile($imagePath) // Asegúrate de usar CURLFile para archivos
-                ),
+                CURLOPT_POSTFIELDS => $postfields,
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+                    'Authorization: Bearer '.$_SESSION['user_data']->token
                 ),
             ));
             
@@ -164,19 +195,28 @@
             curl_close($curl);
             $response = json_decode($response);
             if (isset($response->code) && $response->code > 0) {
-                header("Location: ../products/");
+                $_SESSION['success_message'] = "producto agregado con éxito";
+                header("Location: ".BASE_PATH."products/");
             } else {
-                header("Location: ../products?status=error");
+                $_SESSION['error_message'] = "Error al agregar producto";
+                header("Location: ".BASE_PATH."products/");
             }
         
     }
 
-    public function updateProduct($id,$name,$slug,$description,$features){
+    public function updateProduct($id,$name,$slug,$description,$features,$categories,$tags){
         $postFields = "name=" . urlencode($name) .
                     "&slug=" . urlencode($slug) .
                     "&description=" . urlencode($description) .
                     "&features=" . urlencode($features) .
                     "&id=" . urlencode($id);
+        foreach ($categories as $key => $category) {
+            $postFields .= "&categories[" . urlencode($key) . "]=" . urlencode($category);
+        }
+        
+        foreach ($tags as $key => $tag) {
+            $postFields .= "&tags[" . urlencode($key) . "]=" . urlencode($tag);
+        }
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -191,18 +231,20 @@
         CURLOPT_POSTFIELDS => $postFields,
         CURLOPT_HTTPHEADER => array(
             'Content-Type: application/x-www-form-urlencoded',
-            'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+            'Authorization: Bearer '.$_SESSION['user_data']->token
         ),
         ));
         
         $response = curl_exec($curl);
         
         curl_close($curl);
-        $response=json_decode($response);
-        if(isset($response->code)&&$response->code > 0){
-            header("Location: ../products/");
-        }else{
-            header("Location: ../products?status=error");
+        $response = json_decode($response);
+        if (isset($response->code) && $response->code > 0) {
+            $_SESSION['success_message'] = "producto actualizado con éxito";
+            header("Location: ".BASE_PATH."products/");
+        } else {
+            $_SESSION['error_message'] = "Error al actualizar producto";
+            header("Location: ".BASE_PATH."products/");
         }
         
 
@@ -222,7 +264,7 @@
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'DELETE',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+            'Authorization: Bearer '.$_SESSION['user_data']->token
         ),
         ));
 
@@ -230,10 +272,12 @@
 
         curl_close($curl);
         $response=json_decode($response);
-        if(isset($response->code)&&$response->code > 0){
-            header("Location: ../products/");
-        }else{
-            header("Location: ../products?status=error");
+        if (isset($response->code) && $response->code > 0) {
+            $_SESSION['success_message'] = "producto eliminado con éxito";
+            header("Location: ".BASE_PATH."products/");
+        } else {
+            $_SESSION['error_message'] = "Error al eliminar producto";
+            header("Location: ".BASE_PATH."products/");
         }
     }
 }
