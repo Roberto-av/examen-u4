@@ -77,15 +77,15 @@ $categories = $categoryController->getAllCategories();
               <h5>Nuevo Producto</h5>
             </div>
             <div class="card-body row">
-              <form method="POST" action="../product" enctype="multipart/form-data">
+            <form class="product-form" method="POST" action="../product" enctype="multipart/form-data" novalidate>
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" name="name" placeholder="Ingrese el nombre del producto" />
+                    <input type="text" id="name" class="form-control" name="name" placeholder="Ingrese el nombre del producto" required/>
                   </div>
                   <div class="col-md-6 mb-3">
                     <label class="form-label">Slug</label>
-                    <input type="text" class="form-control" name="slug" placeholder="Ingrese el slug del producto" />
+                    <input type="text" id="slug" class="form-control" name="slug" placeholder="Ingrese el slug del producto" required/>
                   </div>
                 </div>
                 <div class="mb-3">
@@ -132,7 +132,7 @@ $categories = $categoryController->getAllCategories();
                 </div>
                 <div class="mb-0 mt-2">
                   <label class="form-label">Subir imagen</label>
-                  <input type="file" name="cover" class="form-control" />
+                  <input type="file" name="cover" class="form-control" accept="image/*" />
                 </div>
             </div>
           </div>
@@ -172,10 +172,32 @@ $categories = $categoryController->getAllCategories();
         searchPlaceholderValue: 'Buscar tag',
       });
     });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const nameField = document.getElementById('name');
+    const slugField = document.getElementById('slug');
+    
+    nameField.addEventListener('input', function() {
+      let slugValue = nameField.value.trim(); 
+      slugValue = slugValue.replace(/\s+/g, '-'); 
+      slugValue = slugValue.toLowerCase(); 
+      slugField.value = slugValue;
+    });
+  });
+
+
+
+
+
+
   </script>
   <?php include "../layouts/footer.php" ?>
   <?php include "../layouts/scripts.php" ?>
   <?php include "../layouts/modals.php" ?>
+  <script src="../assets\js\validations\validations.js"  defer></script>
+  
+
+
 </body>
 
 </html>

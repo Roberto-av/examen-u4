@@ -55,36 +55,36 @@ include "../../app/config.php";
                             <h5>Nuevo Usuario</h5>
                         </div>
                         <div class="card-body row">
-                            <form method="POST" action="../user" enctype="multipart/form-data">
+                            <form class="users-form" method="POST" action="../user" enctype="multipart/form-data" novalidate>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Nombre</label>
-                                        <input type="text" class="form-control" name="name" placeholder="Ingrese el nombre del usuario" />
+                                        <input type="text" id="name" class="form-control" name="name" placeholder="Ingrese el nombre del usuario" />
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Apellidos</label>
-                                        <input type="text" class="form-control" name="lastname" placeholder="Ingrese los apellidos del usuario" />
+                                        <input type="text"id="apellidos" class="form-control" name="lastname" placeholder="Ingrese los apellidos del usuario" />
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Email</label>
-                                        <input type="text" class="form-control" name="email" placeholder="Ingrese el email del usuario" />
+                                        <input type="text" id="email" class="form-control" name="email" placeholder="Ingrese el email del usuario" />
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Numero de telefono</label>
-                                        <input type="text" class="form-control" name="phone_number" placeholder="Ingrese el telefono del usuario" />
+                                        <input type="text" id="numeroDeTelefono" class="form-control" name="phone_number" placeholder="Ingrese el telefono del usuario" />
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Rol</label>
-                                        <input type="text" class="form-control" name="role" placeholder="Ingrese el rol del usuario" />
+                                        <input type="text" id="rol"class="form-control" name="role" placeholder="Ingrese el rol del usuario" />
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Contraseña</label>
-                                        <input type="password" class="form-control" name="password" placeholder="Ingrese la contraseña del usuario" />
+                                        <input type="password" id="contraseña" class="form-control" name="password" placeholder="Ingrese la contraseña del usuario" />
                                     </div>
                                 </div>
                                 <div class="mb-0 mt-2">
                                     <label class="form-label">Avatar</label>
-                                    <input type="file" name="profile_photo_file" class="form-control" />
+                                    <input type="file"id="cover" name="profile_photo_file" class="form-control" accept="image/* />
                                 </div>
                         </div>
                     </div>
@@ -120,6 +120,7 @@ include "../../app/config.php";
 
     <?php include "../layouts/modals.php" ?>
 
+    <script src="../assets\js\validations\validations.js"  defer></script>
 
 </body>
 <!-- [Body] end -->

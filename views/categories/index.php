@@ -115,7 +115,7 @@ $categories = $categoryController->getAllCategories();
                     <h5 class="modal-title" id="addCategoryLabel">Añadir Nueva Categoría</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="<?= BASE_PATH ?>category">
+                <form class="newcategory-form" method="POST" action="<?= BASE_PATH ?>category"  novalidate>
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="categoryName" class="form-label">Nombre</label>
@@ -148,7 +148,7 @@ $categories = $categoryController->getAllCategories();
                     <h5 class="modal-title" id="editCategoryLabel">Editar Categoría</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="<?= BASE_PATH ?>category">
+                <form class="edit-categoryform"method="POST" action="<?= BASE_PATH ?>category">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="editCategoryName" class="form-label">Nombre</label>
@@ -242,6 +242,8 @@ $categories = $categoryController->getAllCategories();
     <?php include "../layouts/scripts.php" ?>
 
     <?php include "../layouts/modals.php" ?>
+
+    <script src="../assets\js\validations\validations.js"  defer></script>
 
 
 </body>

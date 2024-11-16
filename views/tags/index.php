@@ -115,7 +115,7 @@ $tags = $tagController->getAllTags();
                     <h5 class="modal-title" id="addTagLabel">Añadir Nueva Etiqueta</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="<?= BASE_PATH ?>tag">
+                <form class="add-tag-form" method="POST" action="<?= BASE_PATH ?>tag">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="tagName" class="form-label">Nombre</label>
@@ -148,7 +148,7 @@ $tags = $tagController->getAllTags();
                     <h5 class="modal-title" id="editTagLabel">Editar Etiqueta</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="<?= BASE_PATH ?>tag">
+                <form class="edit-tag-form" method="POST" action="<?= BASE_PATH ?>tag">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="editTagName" class="form-label">Nombre</label>
@@ -242,7 +242,7 @@ $tags = $tagController->getAllTags();
     <?php include "../layouts/scripts.php" ?>
 
     <?php include "../layouts/modals.php" ?>
-
+    <script src="../assets\js\validations\validations.js"  defer></script>
 
 </body>
 <!-- [Body] end -->

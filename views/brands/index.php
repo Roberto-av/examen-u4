@@ -115,7 +115,7 @@ $brands = $brandController->getAllBrands();
                     <h5 class="modal-title" id="addBrandLabel">Añadir Nueva Marca</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="<?= BASE_PATH ?>brand">
+                <form class="newbrands-form" method="POST" action="<?= BASE_PATH ?>brand">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="brandName" class="form-label">Nombre</label>
@@ -148,7 +148,7 @@ $brands = $brandController->getAllBrands();
                     <h5 class="modal-title" id="editBrandLabel">Editar Marca</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="<?= BASE_PATH ?>brand">
+                <form class="edit-brandform" method="POST" action="<?= BASE_PATH ?>brand">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="editBrandName" class="form-label">Nombre</label>
@@ -242,6 +242,8 @@ $brands = $brandController->getAllBrands();
     <?php include "../layouts/scripts.php" ?>
 
     <?php include "../layouts/modals.php" ?>
+
+    <script src="../assets\js\validations\validations.js"  defer></script>
 
 
 </body>
