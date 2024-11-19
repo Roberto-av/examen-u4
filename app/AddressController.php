@@ -3,21 +3,16 @@ include_once "config.php";
 
     var_dump($_GET["id"]);
     if (isset($_POST['action'])) {
-        // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-        //     echo "Error: El token no es válido.";
-        //     exit;
-        // }
+        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+            echo "Error: El token no es válido.";
+            exit;
+        }
         switch ($_POST['action']) {
             
             case 'add_address':
                 //pasa lo mismo de presentaciones, ocupa del id del cliente,
                 //te dejo las dos formas
-                if (isset($_GET['id'])) {
-                    $idClient = $_GET['id'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
-                //$idClient=$_POST["id"];
+                $idClient=$_POST["id"];
                 $name=$_POST["name"];
                 $lastName=$_POST["last_name"];
                 $street=$_POST["street_and_use_number"];
@@ -34,12 +29,7 @@ include_once "config.php";
 
             case "deleteAddress":
                 //mismo que en presentation, solo que aqui mando el del cliente solo para reubicar en los detalles del cliente
-                // $id=$_POST["id_user"];
-                if (isset($_GET['id'])) {
-                    $idClient = $_GET['id'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
+                $id=$_POST["id_user"];
                 $id_address=$_POST["id_address"];
                 $user= new addressController();
                 $user->deleteAddress($idClient,$id_address);
@@ -48,18 +38,8 @@ include_once "config.php";
             case "updateAddress":
                 //pasa lo mismo de presentaciones, ocupa del id del cliente y id del address,
                 //te dejo las dos formas
-                if (isset($_GET['id'])) {
-                    $idClient = $_GET['id'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
-                if (isset($_GET['id_address'])) {
-                    $id_address = $_GET['id_address'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
-                // $idClient = $_POST['id'];
-                // $id_address = $_POST['id_address'];
+                $idClient = $_POST['id'];
+                $id_address = $_POST['id_address'];
                 $name=$_POST["name"];
                 $lastName=$_POST["last_name"];
                 $street=$_POST["street_and_use_number"];

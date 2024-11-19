@@ -1,22 +1,15 @@
 <?php
     include_once "config.php";
-    var_dump($_POST);
     if(isset($_POST["action"])){
-        // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-        //     echo "Error: El token no es válido.";
-        //     exit;
-        // }
+        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+            echo "Error: El token no es válido.";
+            exit;
+        }
         switch($_POST["action"]){
             case "add_presentation":{
                 //ocupa el id del producto mandalos en forma post igual si no 
                 //dejara que se puedan recibir por el url
-
-                if (isset($_GET['id'])) {
-                    $id_producto = $_GET['id'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
-                // $id_producto=$_POST["product_id"];
+                $id_producto=$_POST["product_id"];
                 $description=$_POST["description"];
                 $code=$_POST["code"];
                 $peso=$_POST["weight"];
@@ -29,25 +22,14 @@
                 $stock_min=$_POST["stock_min"];
                 $stock_max=$_POST["stock_max"];
                 $amount=$_POST["amount"];
-                $productController= new controllerPresentations();
-                $productController->createPresentation($id_producto,$description,$code,$peso,$estado,$imagePath,$stock,$stock_min,$stock_max,$amount);
+                $controlador= new controllerPresentations();
+                $controlador->createPresentation($id_producto,$description,$code,$peso,$estado,$imagePath,$stock,$stock_min,$stock_max,$amount);
                 break;
                 
             }
             case "update_presentation":{
                 //ocupa el id del producto y el id de la presentacion para poder actualizar los datos, mandalos en forma post igual si no 
                 //dejara que se puedan recibir por el url
-                
-                // if (isset($_GET['id'])) {
-                //     $id_producto = $_GET['id'];
-                // } else {
-                //     throw new Exception("Slug no proporcionado.");
-                // }
-                // if (isset($_GET['id_presentacion'])) {
-                //     $id_presentacion = $_GET['id_presentacion'];
-                // } else {
-                //     throw new Exception("Slug no proporcionado.");
-                // }
                 $id_producto=$_POST["product_id"];
                 $id_presentacion=$_POST["presentation_id"];
                 $description=$_POST["description"];
@@ -58,38 +40,23 @@
                 $stock_min=$_POST["stock_min"];
                 $stock_max=$_POST["stock_max"];
                 $amount=$_POST["amount"];
-                $productController= new controllerPresentations();
-                $productController->updatePresentation($id_producto,$description,$code,$peso,$estado,$stock,$stock_min,$stock_max,$amount,$id_presentacion);
+                $controlador= new controllerPresentations();
+                $controlador->updatePresentation($id_producto,$description,$code,$peso,$estado,$stock,$stock_min,$stock_max,$amount,$id_presentacion);
                 break;
             }
             case "delete_presentation":{
-                if (isset($_GET['id'])) {
-                    $id_producto = $_GET['id'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
+                $id_producto = $_POST['id'];
                 $id=$_POST["id_presentation"];
                 
-                $productController= new controllerPresentations();
-                $productController->delete($id,$id_producto);
+                $controlador= new controllerPresentations();
+                $controlador->delete($id,$id_producto);
                 break;
             }
             case "update_only_price":{
                 //id de la presentacion para poder actualizar los datos, mandalos en forma post igual si no 
                 //dejara que se puedan recibir por el url
 
-                if (isset($_GET['id'])) {
-                    $id_producto = $_GET['id'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
-
-                if (isset($_GET['id_presentacion'])) {
-                    $id_presentacion = $_GET['id_presentacion'];
-                } else {
-                    throw new Exception("Slug no proporcionado.");
-                }
-                // $id_presentacion = $_POST['id_presentacion'];
+                $id_presentacion = $_POST['id_presentacion'];
                 $amount=$_POST["amount"];
 
                 $presentation=new controllerPresentations();

@@ -1,9 +1,11 @@
 <?php
 include_once "config.php";
 
-   
     if (isset($_POST['action'])) {
-		
+		if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+            echo "Error: El token no es válido.";
+            exit;
+        }
         switch ($_POST['action']) {
             
             case 'addUser':
@@ -222,10 +224,10 @@ include_once "config.php";
             var_dump($response);
             if (isset($response->data)) {
 				$_SESSION['success_message'] = "usuario actualizado con éxito";
-				header("Location: ".BASE_PATH."users/");
+				header("Location: ".BASE_PATH."users/details/".$id);
 			}else{
                 $_SESSION['error_message'] = "Error al actualizado usuario";
-				header("Location: ".BASE_PATH."users/");
+				header("Location: ".BASE_PATH."users/details/".$id);
 			}
 
             

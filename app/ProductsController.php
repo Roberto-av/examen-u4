@@ -1,10 +1,10 @@
 <?php
     include_once "config.php";
     if(isset($_POST["action"])){
-        // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-        //     echo "Error: El token no es válido.";
-        //     exit;
-        // }
+        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+            echo "Error: El token no es válido.";
+            exit;
+        }
         switch($_POST["action"]){
             case "add_product":{
                 $name=$_POST["name"];
@@ -130,7 +130,7 @@
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer 57|ZTliqXzuTSnF4Ogsrj3BdVSH4HPMkfHdmhVrJn4I'
+            'Authorization: Bearer '.$_SESSION['user_data']->token
         ),
         ));
 

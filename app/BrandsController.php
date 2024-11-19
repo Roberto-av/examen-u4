@@ -1,11 +1,10 @@
 <?php 
 include_once "config.php";
-var_dump($_POST);
     if(isset($_POST["action"])){
-        // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-        //     echo "Error: El token no es válido.";
-        //     exit;
-        // }
+        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+            echo "Error: El token no es válido.";
+            exit;
+        }
         switch($_POST["action"]){
             case "add_brand":{
                 $name=$_POST["name"];

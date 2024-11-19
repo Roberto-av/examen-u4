@@ -110,9 +110,9 @@ include "config.php";
 					);
 				};
 				session_destroy();
-				header("Location: ../index.php");
+				header("Location: ".BASE_PATH);
 			}else{
-				header("Location: ../views/home?status=error");
+				header("Location:".BASE_PATH. "home");
 			}
 
 

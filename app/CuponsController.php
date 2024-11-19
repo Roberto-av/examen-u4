@@ -1,12 +1,11 @@
 <?php 
 
-session_start();
-var_dump($_POST);
+include_once "config.php";
     if(isset($_POST["action"])){
-        // if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
-        //     echo "Error: El token no es válido.";
-        //     exit;
-        // }
+        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+            echo "Error: El token no es válido.";
+            exit;
+        }
         switch($_POST["action"]){
             case "add_cupon":{
                 $name=$_POST["name"];
@@ -20,8 +19,8 @@ var_dump($_POST);
                 $count_uses=$_POST["count"];
                 $valid_only_first_purchase=$_POST["valid_only_first_purchase"];
                 $status="1";
-                $productController= new cuponsController();
-                $productController->createCupon($name,$code,$percentage,$min_amount,
+                $controllador= new cuponsController();
+                $controllador->createCupon($name,$code,$percentage,$min_amount,
                                             $min_product,$start_date,$end_date,$max_uses,$count_uses,
                                         $valid_only_first_purchase,$status);
                 break;
@@ -29,10 +28,7 @@ var_dump($_POST);
                 
             }
             case "update_cupon":{
-                
-                if (isset($_GET["id"])){
-                    $id=$_GET["id"];
-                };
+                $id=$_POST["id"];
                 $name=$_POST["name"];
                 $code=$_POST["code"];
                 $percentage=$_POST["percentage"];
@@ -42,15 +38,14 @@ var_dump($_POST);
                 $end_date=$_POST["end_date"];
                 $max_uses=$_POST["max_uses"];
                 $count_uses=$_POST["count"];
-                $productController= new cuponsController();
-                $productController->updateCupon($id,$name,$code,$percentage,$min_amount,$min_product,$start_date,$end_date,$max_uses,$count_uses);
+                $controllador= new cuponsController();
+                $controllador->updateCupon($id,$name,$code,$percentage,$min_amount,$min_product,$start_date,$end_date,$max_uses,$count_uses);
                 break;
             }
             case "delete_cupon":{
                 $id=$_POST["id"];
-                
-                $productController= new cuponsController();
-                $productController->deleteCupon($id);
+                $controllador= new cuponsController();
+                $controllador->deleteCupon($id);
                 break;
             }
 
@@ -86,7 +81,8 @@ class cuponsController {
 			return $response->data;
 
 		}else{
-			return [];
+			$_SESSION['error_message'] = "Error al agregar producto";
+            header("Location: ".BASE_PATH."coupons/");
 		}
 
 	}
@@ -120,7 +116,8 @@ class cuponsController {
 			return $response->data;
 
 		}else{
-			return [];
+			$_SESSION['error_message'] = "Error al agregar producto";
+            header("Location: ".BASE_PATH."coupons/");
 		}
 	}
 
@@ -161,10 +158,12 @@ class cuponsController {
         curl_close($curl);
 		$response = json_decode($response);
 		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../pruebas-back/create.php?status=error");
-		}
+            $_SESSION['success_message'] = "producto agregado con éxito";
+            header("Location: ".BASE_PATH."coupons/");
+        } else {
+            $_SESSION['error_message'] = "Error al agregar producto";
+            header("Location: ".BASE_PATH."coupons/");
+        }
 	}
 
 	public function updateCupon($id,$name,$code,$percentage,$min_amount,$min_product,$start_date,$end_date,$max_uses,$count_uses){
@@ -199,14 +198,16 @@ class cuponsController {
         ));
         
         $response = curl_exec($curl);
-        
+        var_dump($response);
         curl_close($curl);
         $response = json_decode($response);
 		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../pruebas-back/actualizar.php?id=".$id);
-		}
+            $_SESSION['success_message'] = "producto agregado con éxito";
+            header("Location: ".BASE_PATH."coupons/details/".$id);
+        } else {
+            $_SESSION['error_message'] = "Error al agregar producto";
+            header("Location: ".BASE_PATH."coupons/details/".$id);
+        }
 		
 	}
 
@@ -233,10 +234,12 @@ class cuponsController {
         curl_close($curl);
 		$response = json_decode($response);
 		if (isset($response->code) && $response->code > 0) {
-			header("Location: ../pruebas-back/index.php");
-		} else {
-			header("Location: ../index.php?status=error");
-		}
+            $_SESSION['success_message'] = "producto agregado con éxito";
+            header("Location: ".BASE_PATH."coupons");
+        } else {
+            $_SESSION['error_message'] = "Error al agregar producto";
+            header("Location: ".BASE_PATH."coupons");
+        }
 	}
 }
 

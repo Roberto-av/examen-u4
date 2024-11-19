@@ -1,11 +1,12 @@
 <?php
+include_once "config.php";
 
-session_start();
-var_dump($_POST);
 if (isset($_POST['action'])) {
-		
+    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
+        echo "Error: El token no es válido.";
+        exit;
+    }
     switch ($_POST['action']) {
-        
         case 'addClient':
             $name=$_POST["name"];
             $email=$_POST["email"];
@@ -24,17 +25,13 @@ if (isset($_POST['action'])) {
             break;
             
         case "updateClient":
+            $id = $_POST['id'];
             $name=$_POST["name"];
             $email=$_POST["email"];
             $password=$_POST["password"];
             $phone_number=$_POST["phone_number"];
             $suscribed=$_POST["suscribed"];
             $level_id=$_POST["level_id"];
-            if (isset($_GET['id'])) {
-                $id = $_GET['id'];
-            } else {
-                throw new Exception("Slug no proporcionado.");
-            }
 
             $controller= new client;
             $controller->updateClient($name,$email,$password,$phone_number,$suscribed,$level_id,$id);
@@ -60,7 +57,7 @@ if (isset($_POST['action'])) {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                'Authorization: Bearer '.$_SESSION['user_data']->token
 
             ),
             ));
@@ -74,7 +71,8 @@ if (isset($_POST['action'])) {
 				
 				return $response->data;
 			}else{
-				header("Location: ../pruebas-back/index.php?status=error");
+				$_SESSION['error_message'] = "Error al agregar usuario";
+				header("Location: ".BASE_PATH."clients");
 			}
 
 
@@ -100,7 +98,7 @@ if (isset($_POST['action'])) {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                'Authorization: Bearer '.$_SESSION['user_data']->token
             ),
             ));
 
@@ -114,7 +112,8 @@ if (isset($_POST['action'])) {
 				
 				return $response->data;
 			}else{
-				header("Location: ../pruebas-back/index.php?status=error");
+				$_SESSION['error_message'] = "Error al agregar usuario";
+				header("Location: ".BASE_PATH."clients");
 			}
 
         }
@@ -139,7 +138,7 @@ if (isset($_POST['action'])) {
                 'is_suscribed' => $suscribed,
                 'level_id' => $level_id),
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                    'Authorization: Bearer '.$_SESSION['user_data']->token
                 ),
             ));
             
@@ -148,10 +147,11 @@ if (isset($_POST['action'])) {
             $response=json_decode($response);
 
             if (isset($response->data)) {
-				
-				header("Location: ../pruebas-back/index.php?status=acturalizado");
+				$_SESSION['success_message'] = "usuario agregado con éxito";
+				header("Location: ".BASE_PATH."clients");
 			}else{
-				header("Location: ../pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al agregar usuario";
+				header("Location: ".BASE_PATH."clients");
 			}
         }
 
@@ -179,7 +179,7 @@ if (isset($_POST['action'])) {
             CURLOPT_POSTFIELDS => $postFields,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/x-www-form-urlencoded',
-                'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                'Authorization: Bearer '.$_SESSION['user_data']->token
             ),
             ));
 
@@ -189,10 +189,11 @@ if (isset($_POST['action'])) {
             $response=json_decode($response);
 
             if (isset($response->data)) {
-				
-				header("Location: ../pruebas-back/index.php?status=acturalizado");
+				$_SESSION['success_message'] = "usuario agregado con éxito";
+				header("Location: ".BASE_PATH."clients/details/".$id);
 			}else{
-				header("Location: ../pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al agregar usuario";
+				header("Location: ".BASE_PATH."clients/details/".$id);
 			}
 
             
@@ -211,7 +212,7 @@ if (isset($_POST['action'])) {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'DELETE',
             CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer 638|0TLiNi0TT1K1BYRJSWUKVBFTLDjvpegYM7Td9B7v'
+                'Authorization: Bearer '.$_SESSION['user_data']->token
 
             ),
             ));
@@ -220,10 +221,11 @@ if (isset($_POST['action'])) {
 
             curl_close($curl);
             if (isset($response->data)) {
-				
-				header("Location: ../pruebas-back/index.php?status=borrado");
+				$_SESSION['success_message'] = "usuario agregado con éxito";
+				header("Location: ".BASE_PATH."clients");
 			}else{
-				header("Location: ../pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al agregar usuario";
+				header("Location: ".BASE_PATH."clients");
 			}
             
         }
