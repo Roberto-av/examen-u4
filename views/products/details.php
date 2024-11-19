@@ -23,6 +23,11 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
 
 <head>
   <?php include "../layouts/head.php" ?>
+  <style>
+    .clic-cursor {
+      cursor: pointer;
+    }
+  </style>
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
@@ -243,49 +248,106 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
             </div>
           </div>
           <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
               <h5>Presentaciones</h5>
-              <h3 class="mt-4 mb-sm-3 mb-2 f-18">Descripción</h3>
-              <p>Reemplaza tu antigua estufa por una elegante y moderna, elige esta de piso de la marca Whirlpool, la cual tiene un tamaño de 30</p>
-              <div id="categories-container" class="d-flex flex-wrap gap-1 mb-3">
-                <p>peso : 100g</p>
+              <div>
+                <button class="btn btn-outline-primary d-inline-flex" data-bs-toggle="modal" data-bs-target="#addPresentation">
+                  <i class="ti ti-new-section me-1"></i>Añadir presentación
+                </button>
               </div>
             </div>
-            <div class="card-body table-border-style">
-              <div class="table-responsive">
-                <table class="table">
+            <div class="card-body">
+              <div class="dt-responsive">
+                <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Username</th>
+                      <th>id</th>
+                      <th>Descripción</th>
+                      <th>Codigo</th>
+                      <th>Precio</th>
+                      <th>Stock</th>
+                      <th>Min. Stock</th>
+                      <th>Max. Stock</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>Larry</td>
-                      <td>the Bird</td>
-                      <td>@twitter</td>
-                    </tr>
+                    <?php foreach ($product->presentations as $presentation): ?>
+                      <tr id="presentation-<?= $presentation->id ?>" class="clic-cursor presentation-row" data-presentation-id="<?= $presentation->id ?>" onclick="toggleOrders(<?= $presentation->id ?>)">
+                        <td><?= $presentation->id ?></td>
+                        <td style="white-space: normal; word-break: break-word; max-width: 150px;">
+                          <?= $presentation->description ?>
+                        </td>
+                        <td><?= $presentation->code ?></td>
+                        <td>$<?= number_format($presentation->price[0]->amount, 2) ?></td>
+                        <td><?= $presentation->stock ?></td>
+                        <td><?= $presentation->stock_min ?></td>
+                        <td><?= $presentation->stock_max ?></td>
+                        <td>
+                          <button type="button" class="btn btn-icon btn-warning" data-bs-toggle="modal" data-bs-target="#editPresentation" onclick='event.stopPropagation(); editPresentation(this)' data-presentation='<?php echo htmlspecialchars(json_encode($presentation)); ?>'>
+                            <i class="ti ti-pencil"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon btn-danger" data-bs-toggle="modal" data-bs-target="#deletePresentation" onclick="event.stopPropagation(); setPresentationIdToDelete(<?= $presentation->id ?>)">
+                            <i class="ti ti-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+
+                      <!-- Fila de órdenes asociadas a esta presentación (inicialmente oculta) -->
+                      <tr id="orders-row-<?= $presentation->id ?>" class="orders-row" style="display: none;">
+                        <td colspan="8">
+                          <!-- Aquí se mostrarán las órdenes relacionadas a la presentación -->
+                          <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>Folio</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Acciones</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <?php if (!empty($presentation->orders)): ?>
+                                <?php foreach ($presentation->orders as $order): ?>
+                                  <tr>
+                                    <td><?= $order->folio ?></td>
+                                    <td>$<?= number_format($order->total, 2) ?></td>
+                                    <td><?= $order->is_paid == 1 ? "Pagado" : "No pagado" ?></td>
+                                    <td>
+                                      <a href="<?= BASE_PATH ?>orders/details/<?= $order->id ?>" class="btn btn-primary btn-sm">
+                                        Ver
+                                      </a>
+                                    </td>
+                                  </tr>
+                                <?php endforeach; ?>
+                              <?php else: ?>
+                                <tr>
+                                  <td colspan="4">No hay órdenes para esta presentación.</td>
+                                </tr>
+                              <?php endif; ?>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
                   </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>ID</th>
+                      <th>DESCRIPCIÓN</th>
+                      <th>CÓDIGO</th>
+                      <th>PESO</th>
+                      <th>STOCK</th>
+                      <th>MIN. STOCK</th>
+                      <th>MAX. STOCK</th>
+                      <th>ACCIONES</th>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
             </div>
           </div>
+
         </div>
         <!-- [ sample-page ] end -->
       </div>
@@ -295,6 +357,150 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
   <!-- [ Main Content ] end -->
 
   <!-- Modal personalizado -->
+
+  <div id="addPresentation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPresentationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addPresentationLabel">Agregar Presentación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="<?= BASE_PATH ?>presentation" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="row">
+              <!-- Primera fila -->
+              <div class="col-md-6 mb-3">
+                <label for="description_add" class="form-label">Descripción</label>
+                <textarea class="form-control" id="description_add" name="description" rows="3" required></textarea>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="code_add" class="form-label">Código</label>
+                <input type="text" class="form-control" id="code_add" name="code" required>
+              </div>
+            </div>
+
+            <!-- Segunda fila -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="weight_add" class="form-label">Peso</label>
+                <input type="number" class="form-control" id="weight_add" name="weight" step="0.01" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="amount_add" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="amount_add" name="amount" step="0.01" required>
+              </div>
+            </div>
+
+            <!-- Tercera fila -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="status_add" class="form-label">Estado</label>
+                <select class="form-control" id="status_add" name="status" required>
+                  <option value="activo">Activo</option>
+                  <option value="inactivo">Inactivo</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="stock_add" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="stock_add" name="stock" required>
+              </div>
+            </div>
+
+            <!-- Cuarta fila -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="stockMin_add" class="form-label">Stock Mínimo</label>
+                <input type="number" class="form-control" id="stockMin_add" name="stock_min" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="stockMax_add" class="form-label">Stock Máximo</label>
+                <input type="number" class="form-control" id="stockMax_add" name="stock_max" required>
+              </div>
+            </div>
+
+            <!-- Quinta fila -->
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="cover_add" class="form-label">Imagen</label>
+                <input type="file" class="form-control" id="cover_add" name="cover" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+          <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+          <input type="hidden" id="product_id_add" name="id" value="<?= $product_id ?>">
+          <input type="hidden" name="action" value="add_presentation">
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div id="editPresentation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editPresentationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPresentationLabel">Editar Presentación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="<?= BASE_PATH ?>presentation">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="description_edit" class="form-label">Descripción</label>
+              <textarea class="form-control" id="description_edit" name="description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="code_edit" class="form-label">Código</label>
+              <input type="text" class="form-control" id="code_edit" name="code" required>
+            </div>
+            <div class="mb-3">
+              <label for="weight_edit" class="form-label">Peso</label>
+              <input type="number" class="form-control" id="weight_edit" name="weight" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label for="amount_edit" class="form-label">Precio</label>
+              <input type="number" class="form-control" id="amount_edit" name="amount" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label for="status_edit" class="form-label">Estado</label>
+              <select class="form-control" id="status_edit" name="status" required>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="stock_edit" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="stock_edit" name="stock" required>
+            </div>
+            <div class="mb-3">
+              <label for="stockMin_edit" class="form-label">Stock Mínimo</label>
+              <input type="number" class="form-control" id="stockMin_edit" name="stock_min" required>
+            </div>
+            <div class="mb-3">
+              <label for="stockMax_edit" class="form-label">Stock Máximo</label>
+              <input type="number" class="form-control" id="stockMax_edit" name="stock_max" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+          <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+          <input type="hidden" id="presentation_id_edit" name="presentation_id" value="">
+          <input type="hidden" id="product_id_edit" name="product_id" value="">
+          <input type="hidden" name="action" value="update_presentation">
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
   <div id="productModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -309,13 +515,67 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
             <button type="submit" class="btn btn-danger">Eliminar</button>
             <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
             <input type="hidden" name="action" value="delete_product">
-              <input type="hidden" name="id_product" value="<?= $product->id ?>" />
+            <input type="hidden" name="id_product" value="<?= $product->id ?>" />
           </form>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
   </div>
+
+  <div id="deletePresentation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Eliminar Presentación</h5>
+        </div>
+        <div class="modal-body">
+          <p>¿Seguro que deseas eliminar la presentación?</p>
+        </div>
+        <div class="modal-footer">
+          <form method="POST" action="<?= BASE_PATH ?>presentation">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+            <input type="hidden" name="action" value="delete_presentation">
+            <input type="hidden" id="product_id" name="id" value="<?= $product->id ?>" />
+            <input type="hidden" id="presentation-id-input" name="id_presentation" value="" />
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function editPresentation(button) {
+      let presentation = JSON.parse(button.dataset.presentation);
+
+      document.getElementById('product_id_edit').value = presentation.product_id;
+      document.getElementById('presentation_id_edit').value = presentation.id;
+      document.getElementById('description_edit').value = presentation.description;
+      document.getElementById('code_edit').value = presentation.code;
+      document.getElementById('weight_edit').value = presentation.weight_in_grams;
+      document.getElementById('status_edit').value = presentation.status;
+      document.getElementById('stock_edit').value = presentation.stock;
+      document.getElementById('stockMin_edit').value = presentation.stock_min;
+      document.getElementById('stockMax_edit').value = presentation.stock_max;
+      document.getElementById('amount_edit').value = presentation.price[0].amount;
+    }
+
+    function setPresentationIdToDelete(presentationId) {
+      document.getElementById('presentation-id-input').value = presentationId;
+    }
+
+    function toggleOrders(presentationId) {
+      const ordersRow = document.getElementById(`orders-row-${presentationId}`);
+
+      if (ordersRow.style.display === "none") {
+        ordersRow.style.display = "table-row";
+      } else {
+        ordersRow.style.display = "none";
+      }
+    }
+  </script>
 
 
   <?php include "../layouts/footer.php" ?>

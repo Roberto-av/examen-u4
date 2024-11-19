@@ -61,6 +61,9 @@ RewriteRule ^client/?$ app/ClientController.php [NC,L]
 #CuponsController
 RewriteRule ^coupon/?$ app/CuponsController.php [NC,L]
 
+#PresentationsController
+RewriteRule ^presentation/?$ app/PresentationsController.php [NC,L]
+
 
 
 #RewriteCond %{REQUEST_URI} ^\/404/$
