@@ -54,43 +54,43 @@ include "../../app/config.php";
                             <h5>Nuevo Cupón</h5>
                         </div>
                         <div class="card-body row">
-                            <form method="POST" action="<?= BASE_PATH ?>coupon">
+                            <form  class="createcupon-form" method="POST" action="<?= BASE_PATH ?>coupon">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Nombre del cupón</label>
-                                        <input type="text" class="form-control" name="name" placeholder="Ingrese el nombre del cupón" />
+                                        <input type="text" class="form-control" name="name" placeholder="Ingrese el nombre del cupón" required/>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Código del cupón</label>
-                                        <input type="text" class="form-control" name="code" placeholder="Ingrese el código del cupón" />
+                                        <input type="text" class="form-control" name="code" placeholder="Ingrese el código del cupón"required />
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Porcentaje de descuento (%)</label>
-                                        <input type="number" class="form-control" name="percentage" placeholder="Ingrese el porcentaje de descuento" min="0" max="100" />
+                                        <input type="number" class="form-control" name="percentage" placeholder="Ingrese el porcentaje de descuento" min="0" max="100" required/>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Monto mínimo requerido</label>
-                                        <input type="number" class="form-control" name="min_amount" placeholder="Ingrese el monto mínimo requerido" min="0" />
+                                        <input type="number" class="form-control" name="min_amount" placeholder="Ingrese el monto mínimo requerido" min="0" required/>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Fecha de inicio</label>
-                                        <input type="date" class="form-control" name="start_date" />
+                                        <input type="date" class="form-control" name="start_date" required/>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Fecha de finalización</label>
-                                        <input type="date" class="form-control" name="end_date" />
+                                        <input type="date" class="form-control" name="end_date" required/>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Cantidad mínima de productos</label>
-                                        <input type="number" class="form-control" name="min_product" placeholder="Ingrese la cantidad mínima de productos" min="0" />
+                                        <input type="number" class="form-control" name="min_product" placeholder="Ingrese la cantidad mínima de productos" min="0" required/>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Número máximo de usos</label>
-                                        <input type="number" class="form-control" name="max_uses" placeholder="Ingrese el número máximo de usos" min="1" />
+                                        <input type="number" class="form-control" name="max_uses" placeholder="Ingrese el número máximo de usos" min="1" required/>
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Solo válido para primera compra</label>
-                                        <select class="form-control" name="valid_only_first_purchase">
+                                        <select class="form-control" name="valid_only_first_purchase" required>
                                             <option value="" selected disabled>Seleccione una opción</option>
                                             <option value="1">Sí</option>
                                             <option value="0">No</option>
@@ -121,6 +121,7 @@ include "../../app/config.php";
     <?php include "../layouts/footer.php" ?>
     <?php include "../layouts/scripts.php" ?>
     <?php include "../layouts/modals.php" ?>
+     <script src="../assets\js\validations\validations.js"  defer></script>
 
 </body>
 <!-- [Body] end -->

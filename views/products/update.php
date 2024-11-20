@@ -68,7 +68,9 @@ $categories = $categoryController->getAllCategories();
               <h5>Detalles Producto</h5>
             </div>
             <div class="card-body row">
-              <form method="POST" action="../../product" enctype="multipart/form-data">
+
+              <form class="editProduct-form" method="POST" action="../../product" enctype="multipart/form-data">
+
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label class="form-label">Nombre</label>
@@ -130,7 +132,7 @@ $categories = $categoryController->getAllCategories();
                 </div>
                 <div class="mb-0 mt-2">
                   <label class="form-label">Subir imagen</label>
-                  <input type="file" name="cover" class="form-control" />
+                  <input type="file" name="cover" class="form-control" accept="image/*" />
                 </div>
             </div>
           </div>
@@ -178,6 +180,8 @@ $categories = $categoryController->getAllCategories();
   <?php include "../layouts/scripts.php" ?>
 
   <?php include "../layouts/modals.php" ?>
+  
+   <script src="../../assets\js\validations\validations.js"  defer></script>
 </body>
 
 </html>

@@ -55,7 +55,7 @@ include "../../app/config.php";
                             <h5>Nuevo Cliente</h5>
                         </div>
                         <div class="card-body row">
-                            <form method="POST" action="<?= BASE_PATH ?>client" enctype="multipart/form-data">
+                            <form class="createClient-form" method="POST" action="<?= BASE_PATH ?>client" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Nombre</label>
@@ -71,7 +71,7 @@ include "../../app/config.php";
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Suscripción</label>
-                                        <select class="form-control" name="suscribed">
+                                        <select class="form-control" name="suscribed" required>
                                             <option value="" selected disabled>Seleccione una opción</option>
                                             <option value="1">Sí</option>
                                             <option value="0">No</option>
@@ -108,6 +108,8 @@ include "../../app/config.php";
     <?php include "../layouts/scripts.php" ?>
 
     <?php include "../layouts/modals.php" ?>
+
+    <script src="../assets\js\validations\validations.js"  defer></script>
 
 
 </body>

@@ -60,7 +60,7 @@ $coupon = $couponController->getSpecificCupon();
                             <h5>Nuevo Cliente</h5>
                         </div>
                         <div class="card-body row">
-                            <form method="POST" action="<?= BASE_PATH ?>coupon">
+                            <form class="editCupon-form" method="POST" action="<?= BASE_PATH ?>coupon">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Nombre del cupón</label>
@@ -130,6 +130,8 @@ $coupon = $couponController->getSpecificCupon();
     <?php include "../layouts/scripts.php" ?>
 
     <?php include "../layouts/modals.php" ?>
+    
+    <script src="../../assets\js\validations\validations.js"  defer></script>
 
 
 </body>

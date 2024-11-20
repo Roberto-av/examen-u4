@@ -147,7 +147,7 @@ $user = $userController->getUser();
                                         <h5>Editar Usuario</h5>
                                     </div>
                                     <div class="card-body">
-                                        <form method="POST" action="../../user" enctype="multipart/form-data">
+                                        <form class="editUsers-form" method="POST" action="../../user" enctype="multipart/form-data">
 
                                             <div class="row">
                                                 <div class="col-sm-6">
@@ -206,6 +206,7 @@ $user = $userController->getUser();
     <?php include "../layouts/scripts.php" ?>
 
     <?php include "../layouts/modals.php" ?>
+    <script src="../../assets\js\validations\validations.js"  defer></script>
 
 
 </body>
