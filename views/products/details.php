@@ -165,6 +165,12 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
                       <b>$<?= number_format($product->presentations[0]->price[0]->amount, 2) ?>
                     </h3>
                   <?php endif; ?>
+                  
+                  <div class="col-6">
+                    <div class="d-grid">
+                      <a href="<?= BASE_PATH ?>orders/create/<?= $product->id ?>" type="button" class="btn btn-primary">Hacer orden</a>
+                    </div>
+                  </div>
 
                 </div>
               </div>

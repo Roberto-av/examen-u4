@@ -22,11 +22,17 @@ RewriteRule ^clients/create/?$ views/clients/create.php
 RewriteRule ^clients/details/([^\/]+)/?$ views/clients/details.php?id=$1 [L]
 RewriteRule ^clients/update/([^\/]+)/?$ views/clients/update.php?id=$1 [L]
 
-#Clientes
+#Cupones
 RewriteRule ^coupons/?$ views/coupons/index.php 
 RewriteRule ^coupons/create/?$ views/coupons/create.php 
 RewriteRule ^coupons/details/([^\/]+)/?$ views/coupons/details.php?id=$1 [L]
 RewriteRule ^coupons/update/([^\/]+)/?$ views/coupons/update.php?id=$1 [L]
+
+#Ordenes
+RewriteRule ^orders/?$ views/orders/index.php 
+RewriteRule ^orders/create/([^\/]+)/?$ views/orders/create.php?id=$1 [L]
+RewriteRule ^orders/details/([^\/]+)/?$ views/orders/details.php?id=$1 [L]
+RewriteRule ^orders/update/([^\/]+)/?$ views/orders/update.php?id=$1 [L]
 
 #Categorias
 RewriteRule ^categories/?$ views/categories/index.php 
@@ -64,6 +70,8 @@ RewriteRule ^coupon/?$ app/CuponsController.php [NC,L]
 #PresentationsController
 RewriteRule ^presentation/?$ app/PresentationsController.php [NC,L]
 
+#OrdersController
+RewriteRule ^order/?$ app/OrdersController.php [NC,L]
 
 
 #RewriteCond %{REQUEST_URI} ^\/404/$
