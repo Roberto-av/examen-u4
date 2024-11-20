@@ -7,7 +7,7 @@ include_once "config.php";
             exit;
         }
         switch ($_POST['action']) {
-            
+
             case 'add_order':
                 $folio=$_POST["folio"];
                 $total=$_POST["total"];
@@ -23,18 +23,18 @@ include_once "config.php";
                         $presentations[] = $presentation;
                     }
                 }
-                
+
                 $productController= new ordersController();
                 $productController->addOrder($folio,$total,$id_paid,$client_id,$address_id,$order_status_id,$payment_type_id,$cupon_id,$presentations);
                 break;
 
             case "delete_order":
-                
+
                 $id=$_POST["id_order"];
                 $user= new ordersController();
                 $user->deleteOrders($id);
                 break;
-                
+
             case "update_order":
 
                 $id=$_POST["id"];
@@ -45,12 +45,12 @@ include_once "config.php";
                 break;
         }
     }
-    
+
     class ordersController{
 
         public function getAllOrders(){
             //aqui se manda el id del cliente al momento de invocarlo
-            
+
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -79,11 +79,11 @@ include_once "config.php";
                 }else{
                     $_SESSION['error_message'] = "Error al obtener usuarios";
 				    header("Location: ".BASE_PATH."users/");
-                    
-                
+
+
             }
-            
-            
+
+
         }
         public function getOrderBetweenDates(){
             //aqui se manda el id del cliente al momento de invocarlo
@@ -120,8 +120,8 @@ include_once "config.php";
                 }else{
                     $_SESSION['error_message'] = "Error al obtener usuarios";
 				    header("Location: ".BASE_PATH."users/");
-                    
-                
+
+
             }
         }
 
@@ -146,9 +146,9 @@ include_once "config.php";
                 'Authorization: Bearer '.$_SESSION['user_data']->token
                 ),
             ));
-            
+
             $response = curl_exec($curl);
-            
+
             curl_close($curl);
             $response=json_decode($response);
             // var_dump($response);
@@ -158,15 +158,15 @@ include_once "config.php";
                 }else{
                     $_SESSION['error_message'] = "Error al obtener usuarios";
 				    header("Location: ".BASE_PATH."users/");
-                    
-                
+
+
             }
         }
         public function addOrder($folio,$total,$id_paid,$client_id,$address_id,$order_status_id,$payment_type_id,$cupon_id,$presentations){
             $postfields = array(
                 'folio' => $folio,
                 'total' => $total,
-                'is_paid' => $is_paid,
+                'is_paid' => $id_paid,
                 'client_id' => $client_id,
                 'address_id' => $address_id,
                 'order_status_id' => $order_status_id,
@@ -195,15 +195,15 @@ include_once "config.php";
             ));
 
             $response = curl_exec($curl);
-
             curl_close($curl);
             $response=json_decode($response);
+
             if (isset($response->data)) {
-				$_SESSION['success_message'] = "usuario agregado con éxito";
-				header("Location: ".BASE_PATH."pruebas-back/index.php?status=exito");
+				$_SESSION['success_message'] = "ornden agregado con éxito";
+				header("Location: ".BASE_PATH."orders");
 			}else{
-                $_SESSION['error_message'] = "Error al agregar usuario";
-				header("Location: ".BASE_PATH."pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al eliminar orden";
+				header("Location: ".BASE_PATH."orders");
 			}
         }
         public function deleteOrders($id){
@@ -229,13 +229,13 @@ include_once "config.php";
 
             $response=json_decode($response);
             if (isset($response->data)) {
-				$_SESSION['success_message'] = "usuario agregado con éxito";
-				header("Location: ".BASE_PATH."pruebas-back/index.php?status=exito");
+				$_SESSION['success_message'] = "ornden eliminado con éxito";
+				header("Location: ".BASE_PATH."orders");
 			}else{
-                $_SESSION['error_message'] = "Error al agregar usuario";
-				header("Location: ".BASE_PATH."pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al eliminar la  orden";
+				header("Location: ".BASE_PATH."orders");
 			}
-            
+
         }
 
         public function updateOrder($id,$order_status_id) {
@@ -258,19 +258,19 @@ include_once "config.php";
             ));
 
             $response = curl_exec($curl);
-            
+
             curl_close($curl);
             $response=json_decode($response);
             var_dump($response);
             if (isset($response->data)) {
-				$_SESSION['success_message'] = "usuario agregado con éxito";
-				header("Location: ".BASE_PATH."pruebas-back/index.php?status=exito");
+				$_SESSION['success_message'] = "ornden actualizada con éxito";
+				header("Location: ".BASE_PATH."orders/details/".$id);
 			}else{
-                $_SESSION['error_message'] = "Error al agregar usuario";
-				header("Location: ".BASE_PATH."pruebas-back/index.php?status=error");
+                $_SESSION['error_message'] = "Error al actualizada la orden";
+				header("Location: ".BASE_PATH."orders/details/".$id);
 			}
 
-            
+
         }
     }
 ?>
