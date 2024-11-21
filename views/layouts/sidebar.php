@@ -17,26 +17,46 @@
         <li class="pc-item">
           <a href="<?= BASE_PATH ?>home" class="pc-link">
             <span class="pc-micon">
-              <i class="ph-duotone ph-gauge"></i>
+              <i class="ph-duotone ph-house"></i>
             </span>
             <span class="pc-mtext">
-              Dashboard
+              Inicio
             </span>
           </a>
         </li>
         <li class="pc-item pc-caption">
-          <label>Widget</label>
+          <label>Ventas</label>
           <i class="ph-duotone ph-chart-pie"></i>
         </li>
         <li class="pc-item">
           <a href="<?= BASE_PATH ?>products/" class="pc-link">
             <span class="pc-micon">
-              <i class="ph-duotone ph-shopping-bag-open"></i>
+              <i class="ph-duotone ph-shopping-cart-simple"></i>
             </span>
             <span class="pc-mtext">
               Productos
             </span>
           </a>
+        </li>
+        <li class="pc-item">
+          <a href="<?= BASE_PATH ?>orders/" class="pc-link">
+            <span class="pc-micon">
+              <i class="ph-duotone ph-clipboard-text"></i>
+            </span>
+            <span class="pc-mtext">Ordenes</span>
+          </a>
+        </li>
+        <li class="pc-item">
+          <a href="<?= BASE_PATH ?>coupons/" class="pc-link">
+            <span class="pc-micon">
+              <i class="ph-duotone ph-gift"></i>
+            </span>
+            <span class="pc-mtext">Cupones</span>
+          </a>
+        </li>
+        <li class="pc-item pc-caption">
+          <label>Usuarios</label>
+          <i class="ph-duotone ph-chart-pie"></i>
         </li>
         <li class="pc-item">
           <a href="<?= BASE_PATH ?>users/" class="pc-link">
@@ -49,10 +69,14 @@
         <li class="pc-item">
           <a href="<?= BASE_PATH ?>clients/" class="pc-link">
             <span class="pc-micon">
-              <i class="ph-duotone ph-user-circle"></i>
+              <i class="ph-duotone ph-user-list"></i>
             </span>
             <span class="pc-mtext">Clientes</span>
           </a>
+        </li>
+        <li class="pc-item pc-caption">
+          <label>Otros</label>
+          <i class="ph-duotone ph-chart-pie"></i>
         </li>
         <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link">
@@ -68,37 +92,21 @@
             <li class="pc-item"><a class="pc-link" href="<?= BASE_PATH ?>tags/">Etiquetas</a></li>
           </ul>
         </li>
-        <li class="pc-item">
-          <a href="<?= BASE_PATH ?>coupons/" class="pc-link">
-            <span class="pc-micon">
-              <i class="ph-duotone ph-gift"></i>
-            </span>
-            <span class="pc-mtext">Cupones</span>
-          </a>
-        </li>
-        <li class="pc-item">
-          <a href="<?= BASE_PATH ?>orders/" class="pc-link">
-            <span class="pc-micon">
-              <i class="ph-duotone ph-clipboard-text"></i>
-            </span>
-            <span class="pc-mtext">Ordenes</span>
-          </a>
-        </li>
       </ul>
     </div>
     <div class="card pc-user-card">
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="flex-shrink-0">
-            <img src="<?= BASE_PATH ?>assets/images/user/avatar-1.jpg" alt="user-image" class="user-avtar wid-45 rounded-circle" />
+            <img src="<?= $_SESSION['user_data']->avatar ?>" alt="user-image" class="user-avtar wid-45 rounded-circle" />
           </div>
           <div class="flex-grow-1 ms-3">
             <div class="dropdown">
               <a href="#" class="arrow-none dropdown-toggle">
                 <div class="d-flex align-items-center">
                   <div class="flex-grow-1 me-2">
-                    <h6 class="mb-0">Roberto Antonio</h6>
-                    <small>Administrator</small>
+                    <h6 class="mb-0"><?= $_SESSION['user_data']->name ?></h6>
+                    <small><?= $_SESSION['user_data']->role ?></small>
                   </div>
                   <div class="flex-shrink-0">
                     <div class="btn btn-icon btn-link-secondary avtar">

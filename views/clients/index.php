@@ -92,11 +92,17 @@ $clients = $clientController->getAllClients();
                                                             style="width: 40px" />
                                                         <div class="d-inline-block">
                                                             <div style="display: flex; align-items: center;">
-                                                                <h6 class="m-b-0" style="margin-right: 10px;"><?= $client->name ?></h6>
-                                                                <!-- Badge para mostrar el nivel de cliente -->
-                                                                <span class="badge bg-light-primary"><?= $client->level->name ?></span>
+                                                                <h6 class="m-b-0" style="margin-right: 10px;">
+                                                                    <?= !empty($client->name) ? htmlspecialchars($client->name) : 'Nombre no disponible' ?>
+
+                                                                </h6>
+                                                                <span class="badge bg-light-primary">
+                                                                    <?= !empty($client->level->name) ? htmlspecialchars($client->level->name) : 'Nivel no asignado' ?>
+                                                                </span>
                                                             </div>
-                                                            <p class="m-b-0 text-primary"><?= $client->email ?></p>
+                                                            <p class="m-b-0 text-primary">
+                                                            <?= !empty($client->email) ? htmlspecialchars($client->email) : 'Email no disponible' ?>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </td>
