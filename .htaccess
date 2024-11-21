@@ -73,6 +73,6 @@ RewriteRule ^presentation/?$ app/PresentationsController.php [NC,L]
 #OrdersController
 RewriteRule ^order/?$ app/OrdersController.php [NC,L]
 
-
-#RewriteCond %{REQUEST_URI} ^\/404/$
-#RewriteRule ^(.*)$ /views/errors/404.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ views/errors/404.php [L]

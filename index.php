@@ -1,5 +1,5 @@
 <?php
-include "app/config.php";
+include 'app/config.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -74,9 +74,7 @@ include "app/config.php";
     };
   </script>
 
-  <?php include "../layouts/footer.php" ?>
-  <?php include "../layouts/scripts.php" ?>
-  <?php include "../layouts/modals.php" ?>
+  <?php include "views/layouts/scripts.php" ?>
 </body>
 
 </html>
