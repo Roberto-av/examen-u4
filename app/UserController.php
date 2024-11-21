@@ -21,7 +21,7 @@ include_once "config.php";
                 $mime_type = $_FILES['profile_photo_file']['type']; 
                 $imagePath = new CURLFile($tmp_name, $mime_type, $original_name);
                 $productController= new users();
-                $productController->addUser($name,$rol,$lastName,$description,$email,$phone,$password,$createdBy,$imagePath);
+                $productController->addUser($name,$rol,$lastName,$email,$phone,$password,$createdBy,$imagePath);
                 break;
 
             case "deleteUser":
@@ -118,7 +118,7 @@ include_once "config.php";
             
         }
 
-        public function addUser($name,$rol,$lastName,$description,$email,$phone,$password,$createdBy,$imagePath){
+        public function addUser($name,$rol,$lastName,$email,$phone,$password,$createdBy,$imagePath){
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
