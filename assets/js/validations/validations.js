@@ -1367,7 +1367,148 @@ function clearError(field) {
   }
 }
 
+// create-orden
 
+
+const createOrdenForm = document.querySelector('.createorden-form');
+
+if (createOrdenForm) {
+  
+  const folioField = createOrdenForm.querySelector('input[name="folio"]');
+  folioField.addEventListener('input', function (e) {
+    const regex = /^[a-zA-Z0-9-]+$/; // Letras, números y guiones
+    if (!regex.test(e.target.value)) {
+      e.target.setCustomValidity("El folio solo puede contener letras, números y guiones.");
+      showError(folioField, "El folio solo puede contener letras, números y guiones.");
+    } else {
+      e.target.setCustomValidity("");
+      clearError(folioField);
+    }
+  });
+
+  
+  const totalField = createOrdenForm.querySelector('input[name="total"]');
+  totalField.addEventListener('input', function (e) {
+    const regex = /^\d+(\.\d{1,2})?$/; // Número decimal con hasta 2 decimales
+    if (!regex.test(e.target.value)) {
+      e.target.setCustomValidity("El total debe ser un número válido (puede incluir hasta 2 decimales).");
+      showError(totalField, "El total debe ser un número válido (puede incluir hasta 2 decimales).");
+    } else {
+      e.target.setCustomValidity("");
+      clearError(totalField);
+    }
+  });
+
+  
+  const clientField = createOrdenForm.querySelector('select[name="client_id"]');
+  clientField.addEventListener('change', function (e) {
+    if (e.target.value === "") {
+      e.target.setCustomValidity("Debe seleccionar un cliente.");
+      showError(clientField, "Debe seleccionar un cliente.");
+    } else {
+      e.target.setCustomValidity("");
+      clearError(clientField);
+    }
+  });
+
+  
+  const orderStatusField = createOrdenForm.querySelector('select[name="order_status_id"]');
+  orderStatusField.addEventListener('change', function (e) {
+    if (e.target.value === "") {
+      e.target.setCustomValidity("Debe seleccionar un estado para la orden.");
+      showError(orderStatusField, "Debe seleccionar un estado para la orden.");
+    } else {
+      e.target.setCustomValidity("");
+      clearError(orderStatusField);
+    }
+  });
+
+  
+  const paymentTypeField = createOrdenForm.querySelector('select[name="payment_type_id"]');
+  paymentTypeField.addEventListener('change', function (e) {
+    if (e.target.value === "") {
+      e.target.setCustomValidity("Debe seleccionar un tipo de pago.");
+      showError(paymentTypeField, "Debe seleccionar un tipo de pago.");
+    } else {
+      e.target.setCustomValidity("");
+      clearError(paymentTypeField);
+    }
+  });
+
+  
+  const presentationsContainer = document.getElementById('presentations-container');
+  presentationsContainer.addEventListener('input', function (e) {
+    const presentationItems = presentationsContainer.querySelectorAll('.presentation-item');
+    presentationItems.forEach(item => {
+      const select = item.querySelector('select');
+      const quantity = item.querySelector('input[type="number"]');
+
+      if (!select.value) {
+        select.setCustomValidity("Debe seleccionar una presentación.");
+        showError(select, "Debe seleccionar una presentación.");
+      } else {
+        select.setCustomValidity("");
+        clearError(select);
+      }
+
+      if (!quantity.value || quantity.value <= 0) {
+        quantity.setCustomValidity("La cantidad debe ser mayor a 0.");
+        showError(quantity, "La cantidad debe ser mayor a 0.");
+      } else {
+        quantity.setCustomValidity("");
+        clearError(quantity);
+      }
+    });
+  });
+
+  
+  createOrdenForm.addEventListener('submit', function (e) {
+    let isValid = true;
+    const fields = [folioField, totalField, clientField, orderStatusField, paymentTypeField];
+    fields.forEach(field => {
+      if (!field.checkValidity()) {
+        isValid = false;
+        showError(field, "Este campo es obligatorio o contiene datos incorrectos.");
+      } else {
+        clearError(field);
+      }
+    });
+
+    
+    const presentationItems = presentationsContainer.querySelectorAll('.presentation-item');
+    presentationItems.forEach(item => {
+      const select = item.querySelector('select');
+      const quantity = item.querySelector('input[type="number"]');
+      if (!select.checkValidity() || !quantity.checkValidity()) {
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      e.preventDefault();
+      alert("Por favor, corrija los errores antes de enviar el formulario.");
+    }
+  });
+}
+
+
+function showError(field, message) {
+  const error = field.parentNode.querySelector('.error-message');
+  if (!error) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message text-danger mt-1';
+    errorDiv.textContent = message;
+    field.parentNode.appendChild(errorDiv);
+  }
+}
+
+
+function clearError(field) {
+  const error = field.parentNode.querySelector('.error-message');
+  if (error) {
+    error.remove();
+  }
+}
 
 
 

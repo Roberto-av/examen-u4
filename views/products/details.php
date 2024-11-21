@@ -371,7 +371,7 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
           <h5 class="modal-title" id="addPresentationLabel">Agregar Presentación</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="POST" action="<?= BASE_PATH ?>presentation" enctype="multipart/form-data">
+        <form class="presentacion-form" method="POST" action="<?= BASE_PATH ?>presentation" enctype="multipart/form-data">
           <div class="modal-body">
             <div class="row">
               <!-- Primera fila -->
@@ -437,7 +437,7 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           </div>
           <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
-          <input type="hidden" id="product_id_add" name="id" value="<?= $product_id ?>">
+          <input type="hidden" id="product_id_add" name="product_id" value="<?= $product->id ?>">
           <input type="hidden" name="action" value="add_presentation">
         </form>
       </div>
@@ -454,7 +454,7 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
           <h5 class="modal-title" id="editPresentationLabel">Editar Presentación</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="POST" action="<?= BASE_PATH ?>presentation">
+        <form  method="POST" action="<?= BASE_PATH ?>presentation">
           <div class="modal-body">
             <div class="mb-3">
               <label for="description_edit" class="form-label">Descripción</label>

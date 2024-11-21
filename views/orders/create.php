@@ -66,11 +66,11 @@ $presentations = $presentationController->getPresentationsProducts();
                             <h5>Nuevo Orden</h5>
                         </div>
                         <div class="card-body row">
-                            <form class="createcupon-form" method="POST" action="<?= BASE_PATH ?>order">
+                            <form class="createorden-form" method="POST" action="<?= BASE_PATH ?>order">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Folio</label>
-                                        <input type="text" class="form-control" name="folio" placeholder="Ingrese el folio de la orden" required />
+                                        <input type="text" class="form-control" id="folio" name="folio" placeholder="Ingrese el folio de la orden" required />
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Total</label>
@@ -184,11 +184,28 @@ $presentations = $presentationController->getPresentationsProducts();
         
         container.appendChild(newItem);
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        function generarFolio() {
+            return Math.floor(100000000 + Math.random() * 900000000).toString();
+        }
+        var folioInput = document.getElementById("folio");
+        if (folioInput) {
+            folioInput.value = generarFolio();
+        }
+    });
+
+
+
 </script>
+
 
     <?php include "../layouts/footer.php" ?>
     <?php include "../layouts/scripts.php" ?>
     <?php include "../layouts/modals.php" ?>
+    <script src="../../assets\js\validations\validations.js"  defer></script>
+
 
 </body>
 <!-- [Body] end -->

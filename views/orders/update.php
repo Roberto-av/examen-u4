@@ -60,7 +60,7 @@ $coupon = $couponController->getSpecificCupon();
                             <h5>Nuevo Cliente</h5>
                         </div>
                         <div class="card-body row">
-                            <form class="editCupon-form" method="POST" action="<?= BASE_PATH ?>coupon">
+                            <form class="editorden-form" method="POST" action="<?= BASE_PATH ?>coupon">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Nombre del cupón</label>
