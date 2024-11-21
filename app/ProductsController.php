@@ -191,7 +191,6 @@
             
             // Ejecuta la solicitud cURL
             $response = curl_exec($curl);
-            var_dump($response);
             curl_close($curl);
             $response = json_decode($response);
             if (isset($response->code) && $response->code > 0) {

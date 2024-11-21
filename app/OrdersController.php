@@ -72,7 +72,6 @@ include_once "config.php";
 
             curl_close($curl);
             $response=json_decode($response);
-            // var_dump($response);
             if(isset($response->data)){
                 // if($response->data->email==$_SESSION['user_data']->email){
                     return $response->data;
@@ -113,7 +112,6 @@ include_once "config.php";
 
             curl_close($curl);
             $response=json_decode($response);
-            // var_dump($response);
             if(isset($response->data)){
                 // if($response->data->email==$_SESSION['user_data']->email){
                     return $response->data;
@@ -151,7 +149,6 @@ include_once "config.php";
 
             curl_close($curl);
             $response=json_decode($response);
-            // var_dump($response);
             if(isset($response->data)){
                 // if($response->data->email==$_SESSION['user_data']->email){
                     return $response->data;
@@ -261,7 +258,6 @@ include_once "config.php";
 
             curl_close($curl);
             $response=json_decode($response);
-            var_dump($response);
             if (isset($response->data)) {
 				$_SESSION['success_message'] = "ornden actualizada con éxito";
 				header("Location: ".BASE_PATH."orders/details/".$id);

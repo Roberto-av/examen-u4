@@ -1,7 +1,6 @@
 <?php
 include_once "config.php";
 
-    var_dump($_GET["id"]);
     if (isset($_POST['action'])) {
         if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) {
             echo "Error: El token no es válido.";
@@ -84,7 +83,6 @@ include_once "config.php";
             
             curl_close($curl);
             $response=json_decode($response);
-            // var_dump($response);
             if(isset($response->data)&& is_object($response->data)){
                 // if($response->data->email==$_SESSION['user_data']->email){
                     return $response->data;
@@ -201,7 +199,6 @@ include_once "config.php";
             
             curl_close($curl);
             $response=json_decode($response);
-            var_dump($response);
             if (isset($response->data)) {
 				$_SESSION['success_message'] = "usuario agregado con éxito";
 				header("Location: ".BASE_PATH."clients/details/".$idClient);

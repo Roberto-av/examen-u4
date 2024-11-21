@@ -165,7 +165,6 @@ class tagsCrontoller {
         
         $response = curl_exec($curl);
         
-        var_dump($response);
         curl_close($curl);
 		$response = json_decode($response);
 		if (isset($response->data)) {

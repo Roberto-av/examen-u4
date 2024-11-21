@@ -221,7 +221,6 @@ include_once "config.php";
 
             curl_close($curl);
             $response=json_decode($response);
-            var_dump($response);
             if (isset($response->data)) {
 				$_SESSION['success_message'] = "usuario actualizado con éxito";
 				header("Location: ".BASE_PATH."users/details/".$id);
