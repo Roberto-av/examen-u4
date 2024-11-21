@@ -75,7 +75,13 @@ $orders = $orderController->getAllOrders();
                                             <?php foreach ($orders as $order): ?>
                                                 <tr>
                                                     <td><a href="<?= BASE_PATH ?>orders/details/<?= $order->id ?>"><?= $order->folio ?></a></td>
-                                                    <td><a href="<?= BASE_PATH ?>clients/details/<?= $order->client->id ?>"><?= $order->client->name ?></a></td>
+                                                    <td>
+                                                        <?php if (isset($order->client)): ?>
+                                                            <a href="<?= BASE_PATH ?>clients/details/<?= $order->client->id ?>"><?= htmlspecialchars($order->client->name) ?></a>
+                                                        <?php else: ?>
+                                                            <span>Cliente no disponible</span>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td>$<?= number_format($order->total, 2) ?></td>
                                                     <td><?= $order->payment_type->name ?></td>
                                                     <td style="white-space: normal; word-break: break-word; max-width: 150px;">
@@ -217,7 +223,7 @@ $orders = $orderController->getAllOrders();
 
         function setOrderStatus(orderId, currentStatusId) {
             document.getElementById('order-id-input').value = orderId;
-            
+
             const statusSelect = document.getElementById('order-status-select');
             if (statusSelect) {
                 statusSelect.value = currentStatusId;

@@ -82,7 +82,11 @@ $order = $orderController->getSpecificOrder();
                                     <div class="row">
                                         <div class="col-md-6">
                                             <p class="mb-1 text-muted">Cliente</p>
-                                            <p class="mb-0"><?= $order->client->name ?></p>
+                                            <?php if (isset($order->client)): ?>
+                                                <p class="mb-0"><?= $order->client->name ?></p>
+                                            <?php else: ?>
+                                                <p class="mb-0">Cliente no disponible</p>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="col-md-6">
                                             <p class="mb-1 text-muted">Direccion</p>
