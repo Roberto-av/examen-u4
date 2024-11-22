@@ -1,5 +1,5 @@
 <?php 
-	session_start();
+include "config.php";
 
 
 	if (isset($_POST['action'])) {
@@ -16,6 +16,12 @@
 				$authController->access($correo,$contrasena);
 
 			break; 
+			case "logout":
+				$correo= $_SESSION['user_data']->email;
+				$authController = new AuthController();
+
+				$authController->logout($correo);
+				break;
 		}
 	}
 
@@ -28,18 +34,18 @@
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://crud.jonathansoto.mx/api/login',
-			  CURLOPT_RETURNTRANSFER => true,
-			  CURLOPT_ENCODING => '',
-			  CURLOPT_MAXREDIRS => 10,
-			  CURLOPT_TIMEOUT => 0,
-			  CURLOPT_FOLLOWLOCATION => true,
-			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			  CURLOPT_CUSTOMREQUEST => 'POST',
-			  CURLOPT_POSTFIELDS => array(
-			  	'email' => $correo,
-			  	'password' => $contrasena
-			  ),
+			CURLOPT_URL => 'https://crud.jonathansoto.mx/api/login',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => array(
+				'email' => $correo,
+				'password' => $contrasena
+			),
 			));
 
 			$response = curl_exec($curl); 
@@ -49,13 +55,66 @@
 
 			if (isset($response->data)  && is_object($response->data)) {
 				
-
+				$token = $this->token();
 				$_SESSION['user_data'] = $response->data;
-
-				header("Location: ../home.php");
+				$_SESSION['token'] = $token;
+				header("Location:".BASE_PATH. "home");
 			}else{
-				header("Location: ../index.html");
+				$_SESSION['error_message']= "Credenciales inválidas. Por favor, intenta de nuevo.";
+				header("Location: ".BASE_PATH);
 			}
+
+		}
+
+		public function token ($leng=40) {
+            $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            $token = "";
+            
+            for($i=0; $i<$leng; $i++){
+                $token .= $cadena[rand(0,35)];
+            }
+            return $token;
+        }
+
+		public function logout($correo)
+		{
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+			CURLOPT_URL => 'https://crud.jonathansoto.mx/api/logout',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => array('email' => $_SESSION['user_data']->email),
+			CURLOPT_HTTPHEADER => array(
+				'Authorization: Bearer '.$_SESSION['user_data']->token
+			),
+			));
+
+			$response = curl_exec($curl);
+
+			curl_close($curl);
+			$response=json_decode($response);
+			if (isset($response)&& $response->code>0) {
+				$_SESSION = array();
+				if (ini_get("session.use_cookies")) {
+					$params = session_get_cookie_params();
+					setcookie(session_name(), '', time() - 42000,
+						$params["path"], $params["domain"],
+						$params["secure"], $params["httponly"]
+					);
+				};
+				session_destroy();
+				header("Location: ".BASE_PATH);
+			}else{
+				header("Location:".BASE_PATH. "home");
+			}
+
+
 
 		}
 

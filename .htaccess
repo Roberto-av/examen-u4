@@ -2,15 +2,76 @@ Options +FollowSymLinks -MultiViews -Indexes
 RewriteEngine on
 
 #páginas
-RewriteRule ^sample/?$ views/sample.php 
 RewriteRule ^home/?$ views/home.php 
 
+#Productos
 RewriteRule ^products/?$ views/products/index.php 
 RewriteRule ^products/create/?$ views/products/create.php 
-RewriteRule ^products/details/([^\/]+)/?$ views/products/details.php?slug=$1 [L]
-RewriteRule ^products/update/([^\/]+)/?$ views/products/update.php?slug=$1 [L]
+RewriteRule ^products/details/([^\/]+)/?$ views/products/details.php?id=$1 [L]
+RewriteRule ^products/update/([^\/]+)/?$ views/products/update.php?id=$1 [L]
 
+#Usuarios
+RewriteRule ^users/?$ views/users/index.php 
+RewriteRule ^users/create/?$ views/users/create.php 
+RewriteRule ^users/details/([^\/]+)/?$ views/users/details.php?id=$1 [QSA,L]
 
+#Clientes
+RewriteRule ^clients/?$ views/clients/index.php 
+RewriteRule ^clients/create/?$ views/clients/create.php 
+RewriteRule ^clients/details/([^\/]+)/?$ views/clients/details.php?id=$1 [L]
+RewriteRule ^clients/update/([^\/]+)/?$ views/clients/update.php?id=$1 [L]
 
-#RewriteCond %{REQUEST_URI} ^\/404/$
-#RewriteRule ^(.*)$ /views/errors/404.php [L]
+#Cupones
+RewriteRule ^coupons/?$ views/coupons/index.php 
+RewriteRule ^coupons/create/?$ views/coupons/create.php 
+RewriteRule ^coupons/details/([^\/]+)/?$ views/coupons/details.php?id=$1 [L]
+RewriteRule ^coupons/update/([^\/]+)/?$ views/coupons/update.php?id=$1 [L]
+
+#Ordenes
+RewriteRule ^orders/?$ views/orders/index.php 
+RewriteRule ^orders/create/([^\/]+)/?$ views/orders/create.php?id=$1 [L]
+RewriteRule ^orders/details/([^\/]+)/?$ views/orders/details.php?id=$1 [L]
+RewriteRule ^orders/update/([^\/]+)/?$ views/orders/update.php?id=$1 [L]
+
+#Categorias
+RewriteRule ^categories/?$ views/categories/index.php 
+
+#marca
+RewriteRule ^brands/?$ views/brands/index.php 
+
+#tags
+RewriteRule ^tags/?$ views/tags/index.php 
+
+#authController
+RewriteRule ^auth/?$ app/AuthController.php [L]
+
+#ProductController
+RewriteRule ^product/?$ app/ProductsController.php [NC,L]
+
+#ProductController
+RewriteRule ^user/?$ app/UserController.php [NC,L]
+
+#CategoriesController
+RewriteRule ^category/?$ app/CategoriesController.php [NC,L]
+
+#BrandsController
+RewriteRule ^brand/?$ app/BrandsController.php [NC,L]
+
+#TagsController
+RewriteRule ^tag/?$ app/TagsController.php [NC,L]
+
+#TagsController
+RewriteRule ^client/?$ app/ClientController.php [NC,L]
+
+#CuponsController
+RewriteRule ^coupon/?$ app/CuponsController.php [NC,L]
+
+#PresentationsController
+RewriteRule ^presentation/?$ app/PresentationsController.php [NC,L]
+
+#OrdersController
+RewriteRule ^order/?$ app/OrdersController.php [NC,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ views/errors/404.php [L]

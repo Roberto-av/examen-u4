@@ -1,780 +1,594 @@
-<?php 
+<?php
 
-  include "../../app/config.php";
+include "../../app/config.php";
+require_once "../../app/ProductsController.php";
+require_once "../../app/BrandsController.php";
 
+$productController = new controllerProducts();
+$product = $productController->getDetailProduct();
+
+if (isset($product->brand_id) && !empty($product->brand_id)) {
+  $brandController = new BrandsController();
+  $_GET['id'] = $product->brand_id;
+  $marca = $brandController->getSpecificBrand();
+} else {
+  $marca = (object) ['name' => 'Marca no disponible'];
+}
+
+$title = isset($product->name) ? $product->name . " | Detalles" : "Detalles producto";
 ?>
 <!doctype html>
 <html lang="en">
-  <!-- [Head] start -->
-  <head>
-    <?php include "../layouts/head.php" ?>
-  </head>
-  <!-- [Head] end -->
-  <!-- [Body] Start -->
-  <body data-pc-preset="preset-1" data-pc-sidebar-theme="light" data-pc-sidebar-caption="true" data-pc-direction="ltr" data-pc-theme="light">
-    <!-- [ Pre-loader ] start -->
-    <div class="loader-bg">
-      <div class="loader-track">
-        <div class="loader-fill"></div>
-      </div>
+<!-- [Head] start -->
+
+<head>
+  <?php include "../layouts/head.php" ?>
+  <style>
+    .clic-cursor {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
+
+<body data-pc-preset="preset-1" data-pc-sidebar-theme="light" data-pc-sidebar-caption="true" data-pc-direction="ltr" data-pc-theme="light">
+  <!-- [ Pre-loader ] start -->
+  <div class="loader-bg">
+    <div class="loader-track">
+      <div class="loader-fill"></div>
     </div>
-    
-    <!-- [ Pre-loader ] End --> 
-    <?php include "../layouts/sidebar.php" ?> 
-    <?php include "../layouts/navbar.php" ?>
-    
-    <!-- [ Main Content ] start -->
-    <div class="pc-container">
-      <div class="pc-content">
-        <!-- [ breadcrumb ] start -->
-        <div class="page-header">
-          <div class="page-block">
-            <div class="row align-items-center">
-              <div class="col-md-12">
-                <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="../dashboard/index.html">Home</a></li>
-                  <li class="breadcrumb-item"><a href="javascript: void(0)">E-commerce</a></li>
-                  <li class="breadcrumb-item" aria-current="page">Products</li>
-                </ul>
-              </div>
-              <div class="col-md-12">
-                <div class="page-header-title">
-                  <h2 class="mb-0">Products</h2>
-                </div>
+  </div>
+
+  <!-- [ Pre-loader ] End -->
+  <?php include "../layouts/sidebar.php" ?>
+  <?php include "../layouts/navbar.php" ?>
+
+  <!-- [ Main Content ] start -->
+  <div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="<?= BASE_PATH ?>home">Home</a></li>
+                <li class="breadcrumb-item"><a href="<?= BASE_PATH ?>products">Productos</a></li>
+                <li class="breadcrumb-item" aria-current="page">Detalle de producto</li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h2 class="mb-0">Detalle de producto</h2>
               </div>
             </div>
           </div>
         </div>
-        <!-- [ breadcrumb ] end -->
+      </div>
+      <!-- [ breadcrumb ] end -->
 
 
-        <!-- [ Main Content ] start -->
-        <div class="row">
-          <!-- [ sample-page ] start -->
-          <div class="col-sm-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="sticky-md-top product-sticky">
-                      <div id="carouselExampleCaptions" class="carousel slide ecomm-prod-slider" data-bs-ride="carousel">
-                        <div class="carousel-inner bg-light rounded position-relative">
-                          <div class="card-body position-absolute end-0 top-0">
-                            <div class="form-check prod-likes">
-                              <input type="checkbox" class="form-check-input" />
-                              <i data-feather="heart" class="prod-likes-icon"></i>
-                            </div>
-                          </div>
-                          <div class="card-body position-absolute bottom-0 end-0">
-                            <ul class="list-inline ms-auto mb-0 prod-likes">
-                              <li class="list-inline-item m-0">
-                                <a href="#" class="avtar avtar-xs text-white text-hover-primary">
-                                  <i class="ti ti-zoom-in f-18"></i>
-                                </a>
-                              </li>
-                              <li class="list-inline-item m-0">
-                                <a href="#" class="avtar avtar-xs text-white text-hover-primary">
-                                  <i class="ti ti-zoom-out f-18"></i>
-                                </a>
-                              </li>
-                              <li class="list-inline-item m-0">
-                                <a href="#" class="avtar avtar-xs text-white text-hover-primary">
-                                  <i class="ti ti-rotate-clockwise f-18"></i>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="carousel-item active">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-1.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
-                          <div class="carousel-item">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-2.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
-                          <div class="carousel-item">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-3.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
-                          <div class="carousel-item">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-4.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
-                          <div class="carousel-item">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-5.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
-                          <div class="carousel-item">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-6.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
-                          <div class="carousel-item">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-7.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
-                          <div class="carousel-item">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-8.jpg" class="d-block w-100" alt="Product images" />
-                          </div>
+      <?php
+      if (isset($_SESSION['error_message'])) {
+        echo '<div class="alert alert-danger">' . $_SESSION['error_message'] . '</div>';
+        unset($_SESSION['error_message']);
+      }
+      ?>
+
+
+      <!-- [ Main Content ] start -->
+      <div class="row">
+        <!-- [ sample-page ] start -->
+        <div class="col-sm-12">
+          <div class="d-sm-flex align-items-center mb-4">
+            <div class="list-inline ms-auto my-1">
+              <div class="list-inline-item">
+                <a href="<?= BASE_PATH ?>products/update/<?= $product->id ?>" class="btn btn-outline-warning d-inline-flex me-2">
+                  <i class="ti ti-edit me-1"></i>Actualizar Producto
+                </a>
+                <button class="btn btn-outline-danger d-inline-flex" data-bs-toggle="modal" data-bs-target="#productModal">
+                  <i class="ti ti-trash me-1"></i>Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="sticky-md-top product-sticky">
+                    <div id="carouselExampleCaptions" class="carousel slide ecomm-prod-slider" data-bs-ride="carousel">
+                      <div class="carousel-inner bg-light rounded position-relative">
+                        <div class="card-body position-absolute bottom-0 end-0">
+                          <ul class="list-inline ms-auto mb-0 prod-likes">
+                            <li class="list-inline-item m-0">
+                              <a href="#" class="avtar avtar-xs text-white text-hover-primary">
+                                <i class="ti ti-zoom-in f-18"></i>
+                              </a>
+                            </li>
+                            <li class="list-inline-item m-0">
+                              <a href="#" class="avtar avtar-xs text-white text-hover-primary">
+                                <i class="ti ti-zoom-out f-18"></i>
+                              </a>
+                            </li>
+                            <li class="list-inline-item m-0">
+                              <a href="#" class="avtar avtar-xs text-white text-hover-primary">
+                                <i class="ti ti-rotate-clockwise f-18"></i>
+                              </a>
+                            </li>
+                          </ul>
                         </div>
-                        <ol class="list-inline carousel-indicators position-relative product-carousel-indicators my-sm-3 mx-0">
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="list-inline-item w-25 h-auto active">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-1.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" class="list-inline-item w-25 h-auto">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-2.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" class="list-inline-item w-25 h-auto">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-3.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" class="list-inline-item w-25 h-auto">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-4.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4" class="list-inline-item w-25 h-auto">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-5.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="5" class="list-inline-item w-25 h-auto">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-6.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="6" class="list-inline-item w-25 h-auto">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-7.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                          <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="7" class="list-inline-item w-25 h-auto">
-                            <img src="<?= BASE_PATH ?>assets/images/application/img-prod-8.jpg" class="d-block wid-50 rounded" alt="Product images" />
-                          </li>
-                        </ol>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <span class="badge bg-success f-14">In stock</span>
-                    <h5 class="my-3">Apple Watch SE Smartwatch (GPS, 40mm) (Heart Rate Monitoring)</h5>
-                    <div class="star f-18 mb-3">
-                      <i class="fas fa-star text-warning"></i>
-                      <i class="fas fa-star text-warning"></i>
-                      <i class="fas fa-star text-warning"></i>
-                      <i class="fas fa-star-half-alt text-warning"></i>
-                      <i class="far fa-star text-muted"></i>
-                      <span class="text-sm text-muted">(4.0)</span>
-                    </div>
-                    <h5 class="mt-4 mb-sm-1 mb-0">Offer</h5>
-                    <div class="offer-check-block">
-                      <div class="offer-check border rounded p-3">
-                        <div class="form-check">
-                          <input type="radio" name="radio1" class="form-check-input input-primary" id="customCheckdef1" checked="" />
-                          <label class="form-check-label d-block" for="customCheckdef1">
-                            <span class="h6 mb-0 d-block">No Cost EMI</span>
-                            <span class="text-muted offer-details"
-                              >Upto ₹2,322.51 EMI interest savings on select Credit CardsUpto ₹2,322.51 EMI interest savings on select
-                              Credit Cards</span
-                            >
-                            <span class="h6 mb-0 text-primary">1 Offer <i class="ti ti-arrow-narrow-right"></i></span>
-                          </label>
+                        <div class="carousel-item active">
+                          <img src="<?= $product->cover ?>" alt="<?= htmlspecialchars(string: $product->name) ?>" class="img-prod img-fluid" />
                         </div>
                       </div>
-                      <div class="offer-check border rounded p-3">
-                        <div class="form-check">
-                          <input type="radio" name="radio1" class="form-check-input input-primary" id="customCheckdef2" />
-                          <label class="form-check-label d-block" for="customCheckdef2">
-                            <span class="h6 mb-0 d-block">Bank Offer</span>
-                            <span class="text-muted offer-details"
-                              >Upto ₹1,250.00 discount on select Credit CardsUpto ₹2,322.51 EMI interest savings on select Credit
-                              Cards</span
-                            >
-                            <span class="h6 mb-0 text-primary">1 Offer <i class="ti ti-arrow-narrow-right"></i></span>
-                          </label>
-                        </div>
-                      </div>
-                      <div class="offer-check border rounded p-3">
-                        <div class="form-check">
-                          <input type="radio" name="radio1" class="form-check-input input-primary" id="customCheckdef3" />
-                          <label class="form-check-label d-block" for="customCheckdef3">
-                            <span class="h6 mb-0 d-block">No Cost EMI</span>
-                            <span class="text-muted offer-details"
-                              >Upto ₹2,322.51 EMI interest savings on select Credit CardsUpto ₹2,322.51 EMI interest savings on select
-                              Credit Cards</span
-                            >
-                            <span class="h6 mb-0 text-primary">1 Offer <i class="ti ti-arrow-narrow-right"></i></span>
-                          </label>
-                        </div>
-                      </div>
-                      <div class="offer-check border rounded p-3">
-                        <div class="form-check">
-                          <input type="radio" name="radio1" class="form-check-input input-primary" id="customCheckdef4" />
-                          <label class="form-check-label d-block" for="customCheckdef4">
-                            <span class="h6 mb-0 d-block">Bank Offer</span>
-                            <span class="text-muted offer-details"
-                              >Upto ₹1,250.00 discount on select Credit CardsUpto ₹2,322.51 EMI interest savings on select Credit
-                              Cards</span
-                            >
-                            <span class="h6 mb-0 text-primary">1 Offer <i class="ti ti-arrow-narrow-right"></i></span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <h5 class="mt-4 mb-sm-3 mb-2 f-w-500">About this item</h5>
-                    <ul>
-                      <li class="mb-2">Care Instructions: Hand Wash Only</li>
-                      <li class="mb-2">Fit Type: Regular</li>
-                      <li class="mb-2">Dark Blue Regular Women Jeans</li>
-                      <li class="mb-2">Fabric : 100% Cotton</li>
-                    </ul>
-                    <div class="mb-3 row">
-                      <label class="col-form-label col-lg-3 col-sm-12">Colors <span class="text-danger">*</span></label>
-                      <div class="col-lg-6 col-md-12 col-sm-12 d-flex align-items-center">
-                        <div class="form-check form-check-inline color-checkbox mb-0">
-                          <input class="form-check-input" type="radio" name="product_color" checked />
-                          <i class="fas fa-circle text-primary"></i>
-                        </div>
-                        <div class="form-check form-check-inline color-checkbox mb-0">
-                          <input class="form-check-input" type="radio" name="product_color" />
-                          <i class="fas fa-circle text-secondary"></i>
-                        </div>
-                        <div class="form-check form-check-inline color-checkbox mb-0">
-                          <input class="form-check-input" type="radio" name="product_color" />
-                          <i class="fas fa-circle text-danger"></i>
-                        </div>
-                        <div class="form-check form-check-inline color-checkbox mb-0">
-                          <input class="form-check-input" type="radio" name="product_color" />
-                          <i class="fas fa-circle text-dark"></i>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="mb-3 row align-items-center">
-                      <label class="col-form-label col-lg-3 col-sm-12">
-                        <span class="d-block">Size</span>
-                        <a class="link-primary text-sm text-decoration-underline">Size Chart?</a></label
-                      >
-                      <div class="col-lg-9 col-md-12 col-sm-12">
-                        <div class="row g-2">
-                          <div class="col-auto">
-                            <input type="radio" class="btn-check" id="btnrdolite1" name="btn_radio2" checked />
-                            <label class="btn btn-sm btn-light-primary" for="btnrdolite1">Small</label>
-                          </div>
-                          <div class="col-auto">
-                            <input type="radio" class="btn-check" id="btnrdolite2" name="btn_radio2" />
-                            <label class="btn btn-sm btn-light-primary" for="btnrdolite2">Medium</label>
-                          </div>
-                          <div class="col-auto">
-                            <input type="radio" class="btn-check" id="btnrdolite3" name="btn_radio2" />
-                            <label class="btn btn-sm btn-light-primary" for="btnrdolite3">Large</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label class="col-form-label col-lg-3 col-sm-12">Quantity <span class="text-danger">*</span></label>
-                      <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="btn-group btn-group-sm mb-2 border" role="group">
-                          <button type="button" id="decrease" onclick="decreaseValue('number')" class="btn btn-link-secondary"
-                            ><i class="ti ti-minus"></i
-                          ></button>
-                          <input
-                            class="wid-35 text-center border-0 m-0 form-control rounded-0 shadow-none"
-                            type="text"
-                            id="number"
-                            value="0"
-                          />
-                          <button type="button" id="increase" onclick="increaseValue('number')" class="btn btn-link-secondary"
-                            ><i class="ti ti-plus"></i
-                          ></button>
-                        </div>
-                      </div>
-                    </div>
-                    <h3 class="mb-4"
-                      ><b>$299.00</b><span class="mx-2 f-16 text-muted f-w-400 text-decoration-line-through">$399.00</span></h3
-                    >
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="d-grid">
-                          <button type="button" class="btn btn-primary">Buy Now</button>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="d-grid">
-                          <button type="button" class="btn btn-outline-secondary">Add to cart</button>
-                        </div>
-                      </div>
+
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-header pb-0">
-                <ul class="nav nav-tabs profile-tabs mb-0" id="myTab" role="tablist">
-                  <li class="nav-item">
-                    <a
-                      class="nav-link active"
-                      id="ecomtab-tab-1"
-                      data-bs-toggle="tab"
-                      href="#ecomtab-1"
-                      role="tab"
-                      aria-controls="ecomtab-1"
-                      aria-selected="true"
-                      >Features
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      id="ecomtab-tab-2"
-                      data-bs-toggle="tab"
-                      href="#ecomtab-2"
-                      role="tab"
-                      aria-controls="ecomtab-2"
-                      aria-selected="true"
-                      >Specifications
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      id="ecomtab-tab-3"
-                      data-bs-toggle="tab"
-                      href="#ecomtab-3"
-                      role="tab"
-                      aria-controls="ecomtab-3"
-                      aria-selected="true"
-                      >Overview
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      id="ecomtab-tab-4"
-                      data-bs-toggle="tab"
-                      href="#ecomtab-4"
-                      role="tab"
-                      aria-controls="ecomtab-4"
-                      aria-selected="true"
-                      >Reviews<span class="badge bg-light-primary rounded-pill px-2 ms-2">275</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div class="card-body">
-                <div class="tab-content">
-                  <div class="tab-pane show active" id="ecomtab-1" role="tabpanel" aria-labelledby="ecomtab-tab-1">
-                    <div class="table-responsive">
-                      <table class="table table-borderless mb-0">
-                        <tbody>
-                          <tr>
-                            <td class="text-muted py-1">Band :</td>
-                            <td class="py-1">Smart Band</td>
-                          </tr>
-                          <tr>
-                            <td class="text-muted py-1">Compatible Devices :</td>
-                            <td class="py-1">Smartphones</td>
-                          </tr>
-                          <tr>
-                            <td class="text-muted py-1">Ideal For :</td>
-                            <td class="py-1">Unisex</td>
-                          </tr>
-                          <tr>
-                            <td class="text-muted py-1">Lifestyle :</td>
-                            <td class="py-1">Fitness | Indoor | Sports | Swimming | Outdoor</td>
-                          </tr>
-                          <tr>
-                            <td class="text-muted py-1">Basic Features :</td>
-                            <td class="py-1">Calendar | Date & Time | Timer/Stop Watch</td>
-                          </tr>
-                          <tr>
-                            <td class="text-muted py-1">Health Tracker :</td>
-                            <td class="py-1">Heart Rate | Exercise Tracker</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                <div class="col-md-6">
+                  <h3 class="my-3"><?= $product->name ?></h3>
+                  <?php if (isset($product->presentations[0]->stock) && $product->presentations[0]->stock > 0) : ?>
+                    <span class="badge bg-success f-14">Con stock disponible (<?= $product->presentations[0]->stock ?>)</span>
+                  <?php else : ?>
+                    <span class="badge bg-danger f-14">Sin stock</span>
+                  <?php endif; ?>
+                  <p class="mt-4 mb-sm-3 mb-2 fs-5 f-w-300">Sobre este producto</p>
+                  <p><?= $product->description ?></p>
+
+                  <div id="categories-container" class="mb-3">
+                    <p class="mb-2">Categorias</p>
+                    <div class="d-flex flex-wrap gap-1">
+                      <?php foreach ($product->categories as $category) : ?>
+                        <span class="text-decoration-none">
+                          <span class="badge rounded-pill text-bg-secondary"><?= htmlspecialchars($category->name) ?></span>
+                        </span>
+                      <?php endforeach; ?>
                     </div>
                   </div>
-                  <div class="tab-pane" id="ecomtab-2" role="tabpanel" aria-labelledby="ecomtab-tab-2">
-                    <div class="row gy-3">
-                      <div class="col-md-6">
-                        <h5>Product Category</h5>
-                        <hr class="mb-3 mt-1" />
-                        <div class="table-responsive">
-                          <table class="table mb-0">
-                            <tbody>
-                              <tr>
-                                <td class="text-muted py-1 border-top-0">Wearable Device Type:</td>
-                                <td class="py-1 border-top-0">Smart Band</td>
-                              </tr>
-                              <tr>
-                                <td class="text-muted py-1">Compatible Devices :</td>
-                                <td class="py-1">Smartphones</td>
-                              </tr>
-                              <tr>
-                                <td class="text-muted py-1">Ideal For :</td>
-                                <td class="py-1">Unisex</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <h5>Manufacturer Details</h5>
-                        <hr class="mb-3 mt-1" />
-                        <div class="table-responsive">
-                          <table class="table mb-0">
-                            <tbody>
-                              <tr>
-                                <td class="text-muted py-1 border-top-0">Brand :</td>
-                                <td class="py-1 border-top-0">Apple</td>
-                              </tr>
-                              <tr>
-                                <td class="text-muted py-1">Model Series :</td>
-                                <td class="py-1">Watch SE</td>
-                              </tr>
-                              <tr>
-                                <td class="text-muted py-1">Model Number :</td>
-                                <td class="py-1">MYDT2HN/A</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+
+                  <div id="categories-container" class="mb-3">
+                    <p class="mb-2">Tags</p>
+                    <div class="d-flex flex-wrap gap-1">
+                      <?php foreach ($product->tags as $tag) : ?>
+                        <span class="text-decoration-none">
+                          <span class="badge rounded-pill text-bg-dark"><?= htmlspecialchars($tag->name) ?></span>
+                        </span>
+                      <?php endforeach; ?>
                     </div>
                   </div>
-                  <div class="tab-pane" id="ecomtab-3" role="tabpanel" aria-labelledby="ecomtab-tab-3">
-                    <div class="table-responsive">
-                      <p class="text-muted"
-                        >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-                        standard dummy text ever since the 1500s,
-                        <strong class="text-body"
-                          >“When an unknown printer took a galley of type and scrambled it to make a type specimen book.”</strong
-                        >
-                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
-                        unchanged. It was popularized in the 1960s with the release of Lestrade sheets containing Lorem Ipsum passages, and
-                        more recently with desktop publishing software like PageMaker including versions of Lorem Ipsum.
-                      </p>
-                      <p class="text-muted mb-0"
-                        >It was popularized in the 1960s with the release of Learjet sheets containing Lorem Ipsum passages, and more
-                        recently with desktop publishing software like PageMaker including versions of Lorem Ipsum.</p
-                      >
+
+
+                  <?php if (!empty($product->presentations[0]->price)) : ?>
+                    <h3 class="mb-4">
+                      <b>$<?= number_format($product->presentations[0]->price[0]->amount, 2) ?>
+                    </h3>
+                  <?php endif; ?>
+                  
+                  <div class="col-6">
+                    <div class="d-grid">
+                      <a href="<?= BASE_PATH ?>orders/create/<?= $product->id ?>" type="button" class="btn btn-primary">Hacer orden</a>
                     </div>
                   </div>
-                  <div class="tab-pane" id="ecomtab-4" role="tabpanel" aria-labelledby="ecomtab-tab-4">
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="row justify-content-between align-items-center">
-                          <div class="col-xxl-4 col-xl-5">
-                            <h2 class="mb-3"
-                              ><b>3.5<small class="text-muted f-18">/5</small></b></h2
-                            >
-                            <p class="mb-2 text-muted">Based on 275 reviews</p>
-                            <div class="star mb-3 f-20">
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star-half-alt text-warning"></i>
-                              <i class="far fa-star text-muted"></i>
-                            </div>
-                          </div>
-                          <div class="col-xxl-4 col-xl-5">
-                            <div class="d-flex align-items-center">
-                              <div class="w-100">
-                                <div class="row align-items-center my-2">
-                                  <div class="col">
-                                    <div class="progress" style="height: 4px">
-                                      <div class="progress-bar bg-warning" style="width: 30%"></div>
-                                    </div>
-                                  </div>
-                                  <div class="col-auto">
-                                    <p class="mb-0 text-muted">5 Stars</p>
-                                  </div>
-                                </div>
-                                <div class="row align-items-center my-2">
-                                  <div class="col">
-                                    <div class="progress" style="height: 4px">
-                                      <div class="progress-bar bg-warning" style="width: 60%"></div>
-                                    </div>
-                                  </div>
-                                  <div class="col-auto">
-                                    <p class="mb-0 text-muted">4 Stars</p>
-                                  </div>
-                                </div>
-                                <div class="row align-items-center my-2">
-                                  <div class="col">
-                                    <div class="progress" style="height: 4px">
-                                      <div class="progress-bar bg-warning" style="width: 75%"></div>
-                                    </div>
-                                  </div>
-                                  <div class="col-auto">
-                                    <p class="mb-0 text-muted">3 Stars</p>
-                                  </div>
-                                </div>
-                                <div class="row align-items-center my-2">
-                                  <div class="col">
-                                    <div class="progress" style="height: 4px">
-                                      <div class="progress-bar bg-warning" style="width: 40%"></div>
-                                    </div>
-                                  </div>
-                                  <div class="col-auto">
-                                    <p class="mb-0 text-muted">2 Stars</p>
-                                  </div>
-                                </div>
-                                <div class="row align-items-center">
-                                  <div class="col">
-                                    <div class="progress" style="height: 4px">
-                                      <div class="progress-bar bg-warning" style="width: 55%"></div>
-                                    </div>
-                                  </div>
-                                  <div class="col-auto">
-                                    <p class="mb-0 text-muted">1 Stars</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="d-flex align-items-start">
-                          <div class="flex-shrink-0">
-                            <div class="chat-avtar">
-                              <img class="img-radius img-fluid wid-40" src="<?= BASE_PATH ?>assets/images/user/avatar-1.jpg" alt="User image" />
-                              <div class="bg-success chat-badge"></div>
-                            </div>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">Harriet Wilson</h6>
-                            <p class="text-muted text-sm mb-1">2 hour ago</p>
-                            <div class="star">
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star-half-alt text-warning"></i>
-                              <i class="far fa-star text-muted"></i>
-                            </div>
-                            <p class="mb-0 text-muted mt-1"
-                              >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                              industry's standard dummy text ever since the 1500.</p
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="d-flex align-items-start">
-                          <div class="flex-shrink-0">
-                            <div class="chat-avtar">
-                              <img class="img-radius img-fluid wid-40" src="<?= BASE_PATH ?>assets/images/user/avatar-2.jpg" alt="User image" />
-                              <div class="bg-success chat-badge"></div>
-                            </div>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">Lou Olson</h6>
-                            <p class="text-muted text-sm mb-1">2 hour ago</p>
-                            <div class="star">
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star text-warning"></i>
-                              <i class="fas fa-star-half-alt text-warning"></i>
-                              <i class="far fa-star text-muted"></i>
-                              <i class="far fa-star text-muted"></i>
-                            </div>
-                            <p class="mb-2 text-muted mt-1"
-                              >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                              industry's standard dummy text ever since the 1500.</p
-                            >
-                            <a href="#" class="link-primary mb-1">https://phoenixcoded.net/</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="text-center mt-3">
-                      <button class="btn btn-link-primary">View more comments</button>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
-            <div class="card">
-              <div class="card-header">
-                <h5>Related Product</h5>
-              </div>
-              <div class="card-body">
-                <div class="row gy-3">
-                  <div class="col-sm-6 col-xxl-3 col-xl-4">
-                    <div class="card product-card mb-0">
-                      <div class="card-img-top">
-                        <a href="ecom_product-details.html">
-                          <img src="<?= BASE_PATH ?>assets/images/application/img-prod-2.jpg" alt="image" class="img-prod img-fluid" />
-                        </a>
-                        <div class="card-body position-absolute end-0 top-0">
-                          <div class="form-check prod-likes">
-                            <input type="checkbox" class="form-check-input" />
-                            <i data-feather="heart" class="prod-likes-icon"></i>
-                          </div>
-                        </div>
-                        <div class="card-body position-absolute start-0 top-0">
-                          <span class="badge bg-danger badge-prod-card">30%</span>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                        <a href="ecom_product-details.html">
-                          <p class="prod-content mb-0 text-muted">Apple watch -4</p>
-                        </a>
-                        <div class="d-flex align-items-center justify-content-between mt-2 mb-3 flex-wrap">
-                          <h4 class="mb-0 text-truncate"
-                            ><b>$299.00</b> <span class="text-sm text-muted f-w-400 text-decoration-line-through">$399.00</span></h4
-                          >
-                          <div class="d-inline-flex align-items-center">
-                            <i class="ph-duotone ph-star text-warning me-1"></i>
-                            4.5 <small class="text-muted">/ 5</small>
-                          </div>
-                        </div>
-                        <div class="d-flex">
-                          <div class="flex-shrink-0">
-                            <a href="#" class="avtar avtar-s btn-link-secondary btn-prod-card">
-                              <i class="ph-duotone ph-eye f-18"></i>
-                            </a>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <div class="d-grid">
-                              <button class="btn btn-link-secondary btn-prod-card">Add to cart</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 col-xxl-3 col-xl-4">
-                    <div class="card product-card mb-0">
-                      <div class="card-img-top">
-                        <a href="ecom_product-details.html">
-                          <img src="<?= BASE_PATH ?>assets/images/application/img-prod-3.jpg" alt="image" class="img-prod img-fluid" />
-                        </a>
-                        <div class="card-body position-absolute end-0 top-0">
-                          <div class="form-check prod-likes">
-                            <input type="checkbox" class="form-check-input" />
-                            <i data-feather="heart" class="prod-likes-icon"></i>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                        <a href="ecom_product-details.html">
-                          <p class="prod-content mb-0 text-muted">Apple watch -4</p>
-                        </a>
-                        <div class="d-flex align-items-center justify-content-between mt-2 mb-3 flex-wrap">
-                          <h4 class="mb-0 text-truncate"
-                            ><b>$299.00</b> <span class="text-sm text-muted f-w-400 text-decoration-line-through">$399.00</span></h4
-                          >
-                          <div class="d-inline-flex align-items-center">
-                            <i class="ph-duotone ph-star text-warning me-1"></i>
-                            4.5 <small class="text-muted">/ 5</small>
-                          </div>
-                        </div>
-                        <div class="d-flex">
-                          <div class="flex-shrink-0">
-                            <a href="#" class="avtar avtar-s btn-link-secondary btn-prod-card">
-                              <i class="ph-duotone ph-eye f-18"></i>
-                            </a>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <div class="d-grid">
-                              <button class="btn btn-link-secondary btn-prod-card">Add to cart</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 col-xxl-3 col-xl-4">
-                    <div class="card product-card mb-0">
-                      <div class="card-img-top">
-                        <a href="ecom_product-details.html">
-                          <img src="<?= BASE_PATH ?>assets/images/application/img-prod-4.jpg" alt="image" class="img-prod img-fluid" />
-                        </a>
-                        <div class="card-body position-absolute end-0 top-0">
-                          <div class="form-check prod-likes">
-                            <input type="checkbox" class="form-check-input" />
-                            <i data-feather="heart" class="prod-likes-icon"></i>
-                          </div>
-                        </div>
-                        <div class="card-body position-absolute start-0 top-0">
-                          <span class="badge bg-danger badge-prod-card">30%</span>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                        <a href="ecom_product-details.html">
-                          <p class="prod-content mb-0 text-muted">Apple watch -4</p>
-                        </a>
-                        <div class="d-flex align-items-center justify-content-between mt-2 mb-3 flex-wrap">
-                          <h4 class="mb-0 text-truncate"
-                            ><b>$299.00</b> <span class="text-sm text-muted f-w-400 text-decoration-line-through">$399.00</span></h4
-                          >
-                          <div class="d-inline-flex align-items-center">
-                            <i class="ph-duotone ph-star text-warning me-1"></i>
-                            4.5 <small class="text-muted">/ 5</small>
-                          </div>
-                        </div>
-                        <div class="d-flex">
-                          <div class="flex-shrink-0">
-                            <a href="#" class="avtar avtar-s btn-link-secondary btn-prod-card">
-                              <i class="ph-duotone ph-eye f-18"></i>
-                            </a>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <div class="d-grid">
-                              <button class="btn btn-link-secondary btn-prod-card">Add to cart</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 col-xxl-3 col-xl-4">
-                    <div class="card product-card mb-0">
-                      <div class="card-img-top">
-                        <a href="ecom_product-details.html">
-                          <img src="<?= BASE_PATH ?>assets/images/application/img-prod-5.jpg" alt="image" class="img-prod img-fluid" />
-                        </a>
-                        <div class="card-body position-absolute end-0 top-0">
-                          <div class="form-check prod-likes">
-                            <input type="checkbox" class="form-check-input" />
-                            <i data-feather="heart" class="prod-likes-icon"></i>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                        <a href="ecom_product-details.html">
-                          <p class="prod-content mb-0 text-muted">Apple watch -4</p>
-                        </a>
-                        <div class="d-flex align-items-center justify-content-between mt-2 mb-3 flex-wrap">
-                          <h4 class="mb-0 text-truncate"
-                            ><b>$299.00</b> <span class="text-sm text-muted f-w-400 text-decoration-line-through">$399.00</span></h4
-                          >
-                          <div class="d-inline-flex align-items-center">
-                            <i class="ph-duotone ph-star text-warning me-1"></i>
-                            4.5 <small class="text-muted">/ 5</small>
-                          </div>
-                        </div>
-                        <div class="d-flex">
-                          <div class="flex-shrink-0">
-                            <a href="#" class="avtar avtar-s btn-link-secondary btn-prod-card">
-                              <i class="ph-duotone ph-eye f-18"></i>
-                            </a>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <div class="d-grid">
-                              <button class="btn btn-link-secondary btn-prod-card">Add to cart</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+          </div>
+          <div class="card">
+            <div class="card-header pb-0">
+              <ul class="nav nav-tabs profile-tabs mb-0" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    id="ecomtab-tab-1"
+                    data-bs-toggle="tab"
+                    href="#ecomtab-1"
+                    role="tab"
+                    aria-controls="ecomtab-1"
+                    aria-selected="true">Características
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="card-body">
+              <div class="tab-content">
+                <div class="tab-pane show active" id="ecomtab-1" role="tabpanel" aria-labelledby="ecomtab-tab-1">
+                  <div class="table-responsive">
+                    <table class="table table-borderless mb-0">
+                      <tbody>
+                        <tr>
+                          <td class="text-muted py-1">Marca :</td>
+                          <td class="py-1"><?= $marca->name ?></td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Tags :</td>
+                          <td class="py-1">
+                            <?php
+                            if (isset($product->tags) && !empty($product->tags)) :
+                              $tags = array_map(function ($tag) {
+                                return htmlspecialchars($tag->name);
+                              }, $product->tags);
+
+                              echo implode(' | ', $tags);
+                            else :
+                              echo 'No disponible';
+                            endif;
+                            ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Categorias :</td>
+                          <td class="py-1">
+                            <?php
+                            if (isset($product->categories) && !empty($product->categories)) :
+                              $categories = array_map(function ($category) {
+                                return htmlspecialchars($category->name);
+                              }, $product->categories);
+
+                              echo implode(' | ', $categories);
+                            else :
+                              echo 'No disponible';
+                            endif;
+                            ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Peso :</td>
+                          <td class="py-1"><?= isset($product->presentations[0]->weight_in_grams) ? $product->presentations[0]->weight_in_grams . ' g' : 'No disponible' ?></td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Codigo :</td>
+                          <td class="py-1"><?= isset($product->presentations[0]->code) ? $product->presentations[0]->code : 'No disponible' ?></td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted py-1">Status :</td>
+                          <td class="py-1"><?= isset($product->presentations[0]->status) ? $product->presentations[0]->status : 'No disponible' ?></td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- [ sample-page ] end -->
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5>Presentaciones</h5>
+              <div>
+                <button class="btn btn-outline-primary d-inline-flex" data-bs-toggle="modal" data-bs-target="#addPresentation">
+                  <i class="ti ti-new-section me-1"></i>Añadir presentación
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="dt-responsive table-responsive">
+                <table id="dom-jqry" class="table table-striped table-bordered nowrap">
+                  <thead>
+                    <tr>
+                      <th>id</th>
+                      <th>Descripción</th>
+                      <th>Codigo</th>
+                      <th>Precio</th>
+                      <th>Stock</th>
+                      <th>Min. Stock</th>
+                      <th>Max. Stock</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($product->presentations as $presentation): ?>
+                      <tr id="presentation-<?= $presentation->id ?>" class="clic-cursor presentation-row" data-presentation-id="<?= $presentation->id ?>" onclick="toggleOrders(<?= $presentation->id ?>)">
+                        <td><?= $presentation->id ?></td>
+                        <td style="white-space: normal; word-break: break-word; max-width: 150px;">
+                          <?= $presentation->description ?>
+                        </td>
+                        <td><?= $presentation->code ?></td>
+                        <td>$<?= number_format($presentation->price[0]->amount, 2) ?></td>
+                        <td><?= $presentation->stock ?></td>
+                        <td><?= $presentation->stock_min ?></td>
+                        <td><?= $presentation->stock_max ?></td>
+                        <td>
+                          <button type="button" class="btn btn-icon btn-warning" data-bs-toggle="modal" data-bs-target="#editPresentation" onclick='event.stopPropagation(); editPresentation(this)' data-presentation='<?php echo htmlspecialchars(json_encode($presentation)); ?>'>
+                            <i class="ti ti-pencil"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon btn-danger" data-bs-toggle="modal" data-bs-target="#deletePresentation" onclick="event.stopPropagation(); setPresentationIdToDelete(<?= $presentation->id ?>)">
+                            <i class="ti ti-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+
+                      <!-- Fila de órdenes asociadas a esta presentación (inicialmente oculta) -->
+                      <tr id="orders-row-<?= $presentation->id ?>" class="orders-row" style="display: none;">
+                        <td colspan="8">
+                          <!-- Aquí se mostrarán las órdenes relacionadas a la presentación -->
+                          <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>Folio</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Acciones</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <?php if (!empty($presentation->orders)): ?>
+                                <?php foreach ($presentation->orders as $order): ?>
+                                  <tr>
+                                    <td><?= $order->folio ?></td>
+                                    <td>$<?= number_format($order->total, 2) ?></td>
+                                    <td><?= $order->is_paid == 1 ? "Pagado" : "No pagado" ?></td>
+                                    <td>
+                                      <a href="<?= BASE_PATH ?>orders/details/<?= $order->id ?>" class="btn btn-primary btn-sm">
+                                        Ver
+                                      </a>
+                                    </td>
+                                  </tr>
+                                <?php endforeach; ?>
+                              <?php else: ?>
+                                <tr>
+                                  <td colspan="4">No hay órdenes para esta presentación.</td>
+                                </tr>
+                              <?php endif; ?>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>ID</th>
+                      <th>DESCRIPCIÓN</th>
+                      <th>CÓDIGO</th>
+                      <th>PESO</th>
+                      <th>STOCK</th>
+                      <th>MIN. STOCK</th>
+                      <th>MAX. STOCK</th>
+                      <th>ACCIONES</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <!-- [ Main Content ] end -->
+        <!-- [ sample-page ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+  </div>
+  <!-- [ Main Content ] end -->
+
+  <!-- Modal personalizado -->
+
+  <div id="addPresentation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPresentationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addPresentationLabel">Agregar Presentación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="presentacion-form" method="POST" action="<?= BASE_PATH ?>presentation" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="row">
+              <!-- Primera fila -->
+              <div class="col-md-6 mb-3">
+                <label for="description_add" class="form-label">Descripción</label>
+                <textarea class="form-control" id="description_add" name="description" rows="3" required></textarea>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="code_add" class="form-label">Código</label>
+                <input type="text" class="form-control" id="code_add" name="code" required>
+              </div>
+            </div>
+
+            <!-- Segunda fila -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="weight_add" class="form-label">Peso</label>
+                <input type="number" class="form-control" id="weight_add" name="weight" step="0.01" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="amount_add" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="amount_add" name="amount" step="0.01" required>
+              </div>
+            </div>
+
+            <!-- Tercera fila -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="status_add" class="form-label">Estado</label>
+                <select class="form-control" id="status_add" name="status" required>
+                  <option value="activo">Activo</option>
+                  <option value="inactivo">Inactivo</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="stock_add" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="stock_add" name="stock" required>
+              </div>
+            </div>
+
+            <!-- Cuarta fila -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="stockMin_add" class="form-label">Stock Mínimo</label>
+                <input type="number" class="form-control" id="stockMin_add" name="stock_min" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="stockMax_add" class="form-label">Stock Máximo</label>
+                <input type="number" class="form-control" id="stockMax_add" name="stock_max" required>
+              </div>
+            </div>
+
+            <!-- Quinta fila -->
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="cover_add" class="form-label">Imagen</label>
+                <input type="file" class="form-control" id="cover_add" name="cover" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+          <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+          <input type="hidden" id="product_id_add" name="product_id" value="<?= $product->id ?>">
+          <input type="hidden" name="action" value="add_presentation">
+        </form>
       </div>
     </div>
-    <!-- [ Main Content ] end -->
-    
-    <?php include "../layouts/footer.php" ?> 
+  </div>
 
-    <?php include "../layouts/scripts.php" ?> 
 
-    <?php include "../layouts/modals.php" ?>
-  </body>
-  <!-- [Body] end -->undefined
+
+
+  <div id="editPresentation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editPresentationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPresentationLabel">Editar Presentación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form  method="POST" action="<?= BASE_PATH ?>presentation">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="description_edit" class="form-label">Descripción</label>
+              <textarea class="form-control" id="description_edit" name="description" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="code_edit" class="form-label">Código</label>
+              <input type="text" class="form-control" id="code_edit" name="code" required>
+            </div>
+            <div class="mb-3">
+              <label for="weight_edit" class="form-label">Peso</label>
+              <input type="number" class="form-control" id="weight_edit" name="weight" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label for="amount_edit" class="form-label">Precio</label>
+              <input type="number" class="form-control" id="amount_edit" name="amount" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label for="status_edit" class="form-label">Estado</label>
+              <select class="form-control" id="status_edit" name="status" required>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="stock_edit" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="stock_edit" name="stock" required>
+            </div>
+            <div class="mb-3">
+              <label for="stockMin_edit" class="form-label">Stock Mínimo</label>
+              <input type="number" class="form-control" id="stockMin_edit" name="stock_min" required>
+            </div>
+            <div class="mb-3">
+              <label for="stockMax_edit" class="form-label">Stock Máximo</label>
+              <input type="number" class="form-control" id="stockMax_edit" name="stock_max" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+          <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+          <input type="hidden" id="presentation_id_edit" name="presentation_id" value="">
+          <input type="hidden" id="product_id_edit" name="product_id" value="">
+          <input type="hidden" name="action" value="update_presentation">
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="productModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Eliminar Producto</h5>
+        </div>
+        <div class="modal-body">
+          <p>¿Seguro que deseas eliminar el producto?</p>
+        </div>
+        <div class="modal-footer">
+          <form method="POST" action="../../product">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+            <input type="hidden" name="action" value="delete_product">
+            <input type="hidden" name="id_product" value="<?= $product->id ?>" />
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="deletePresentation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Eliminar Presentación</h5>
+        </div>
+        <div class="modal-body">
+          <p>¿Seguro que deseas eliminar la presentación?</p>
+        </div>
+        <div class="modal-footer">
+          <form method="POST" action="<?= BASE_PATH ?>presentation">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+            <input type="hidden" name="action" value="delete_presentation">
+            <input type="hidden" id="product_id" name="id" value="<?= $product->id ?>" />
+            <input type="hidden" id="presentation-id-input" name="id_presentation" value="" />
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function editPresentation(button) {
+      let presentation = JSON.parse(button.dataset.presentation);
+
+      document.getElementById('product_id_edit').value = presentation.product_id;
+      document.getElementById('presentation_id_edit').value = presentation.id;
+      document.getElementById('description_edit').value = presentation.description;
+      document.getElementById('code_edit').value = presentation.code;
+      document.getElementById('weight_edit').value = presentation.weight_in_grams;
+      document.getElementById('status_edit').value = presentation.status;
+      document.getElementById('stock_edit').value = presentation.stock;
+      document.getElementById('stockMin_edit').value = presentation.stock_min;
+      document.getElementById('stockMax_edit').value = presentation.stock_max;
+      document.getElementById('amount_edit').value = presentation.price[0].amount;
+    }
+
+    function setPresentationIdToDelete(presentationId) {
+      document.getElementById('presentation-id-input').value = presentationId;
+    }
+
+    function toggleOrders(presentationId) {
+      const ordersRow = document.getElementById(`orders-row-${presentationId}`);
+
+      if (ordersRow.style.display === "none") {
+        ordersRow.style.display = "table-row";
+      } else {
+        ordersRow.style.display = "none";
+      }
+    }
+  </script>
+
+
+  <?php include "../layouts/footer.php" ?>
+
+  <?php include "../layouts/scripts.php" ?>
+
+  <?php include "../layouts/modals.php" ?>
+</body>
+
 </html>
