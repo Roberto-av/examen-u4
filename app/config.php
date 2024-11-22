@@ -14,11 +14,10 @@ $loginPath = getenv('LOGIN_PATH') ?: '/examen-u4/';
 
 if ($_SERVER['REQUEST_URI'] == $loginPath) {
     if (isset($_SESSION["user_data"])) {
-        header('Location: ' . $basePath . 'home');
-        exit();
+        header('Location: ' . $basePath . 'home'); 
     }
 } else {
     if (!isset($_SESSION["user_data"])) {
-        header('Location: ' . $loginPath);
+        header('Location: ' . $basePath);
     }
 }
