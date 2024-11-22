@@ -5,6 +5,8 @@ require_once "../../app/TagsController.php";
 
 $tagController = new tagsCrontoller();
 $tags = $tagController->getAllTags();
+
+$title = "Lista de usuarios";
 ?>
 <!doctype html>
 <html lang="en">
@@ -61,7 +63,7 @@ $tags = $tagController->getAllTags();
                             <h5>Etiquetas</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dt-responsive">
+                            <div class="dt-responsive table-responsive">
                                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
@@ -211,6 +213,7 @@ $tags = $tagController->getAllTags();
                 "order": [
                     [3, "asc"]
                 ],
+                "scrollX": true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ entradas por página",
                     "zeroRecords": "No se encontraron resultados",

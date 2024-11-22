@@ -7,6 +7,7 @@ require_once "../../app/CuponsController.php";
 $couponController = new cuponsController();
 $coupon = $couponController->getSpecificCupon();
 
+$title = isset($coupon->name) ? $coupon->name . " | Actualizar" : "Actualizar cupon";
 ?>
 <!doctype html>
 <html lang="en">

@@ -6,7 +6,7 @@ require_once "../../app/OrdersController.php";
 $orderController = new ordersController();
 $order = $orderController->getSpecificOrder();
 
-
+$title = isset($order->folio) ? $order->folio . " | Detalles" : "Detalles de orden";
 ?>
 <!doctype html>
 <html lang="en">
@@ -126,7 +126,7 @@ $order = $orderController->getSpecificOrder();
                             <h5>Presentaciones de producto</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dt-responsive">
+                            <div class="dt-responsive table-responsive">
                                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
@@ -193,6 +193,7 @@ $order = $orderController->getSpecificOrder();
                 "order": [
                     [3, "asc"]
                 ],
+                "scrollX": true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ entradas por página",
                     "zeroRecords": "No se encontraron resultados",

@@ -6,6 +6,8 @@ require_once "../../app/UserController.php";
 
 $userController = new users();
 $user = $userController->getUser();
+
+$title = isset($user->name) ? $user->name . " | Detalles" : "Detalle de usuario";
 ?>
 <!doctype html>
 <html lang="en">

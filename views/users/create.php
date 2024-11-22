@@ -2,6 +2,7 @@
 
 include "../../app/config.php";
 
+$title = "Crear usuario";
 ?>
 <!doctype html>
 <html lang="en">

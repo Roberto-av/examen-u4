@@ -22,6 +22,7 @@ foreach ($coupon->orders as $order) {
     }
 }
 
+$title = isset($coupon->name) ? $coupon->name . " | Detalles" : "Detalles de cupon";
 ?>
 <!doctype html>
 <html lang="en">
@@ -169,7 +170,7 @@ foreach ($coupon->orders as $order) {
                             <h5>Órdenes</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dt-responsive">
+                            <div class="dt-responsive table-responsive">
                                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
@@ -231,6 +232,7 @@ foreach ($coupon->orders as $order) {
                 "order": [
                     [3, "asc"]
                 ],
+                "scrollX": true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ entradas por página",
                     "zeroRecords": "No se encontraron resultados",

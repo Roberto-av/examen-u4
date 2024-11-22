@@ -5,6 +5,8 @@ require_once "../../app/BrandsController.php";
 
 $brandController = new BrandsController();
 $brands = $brandController->getAllBrands();
+
+$title = "Lista de marcas";
 ?>
 <!doctype html>
 <html lang="en">
@@ -61,7 +63,7 @@ $brands = $brandController->getAllBrands();
                             <h5>Marcas</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dt-responsive">
+                            <div class="dt-responsive table-responsive">
                                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
@@ -211,6 +213,7 @@ $brands = $brandController->getAllBrands();
                 "order": [
                     [3, "asc"]
                 ],
+                "scrollX": true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ entradas por página",
                     "zeroRecords": "No se encontraron resultados",

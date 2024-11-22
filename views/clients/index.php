@@ -6,6 +6,8 @@ require_once "../../app/ClientController.php";
 
 $clientController = new client();
 $clients = $clientController->getAllClients();
+
+$title = "Lista de clientes";
 ?>
 <!doctype html>
 <html lang="en">

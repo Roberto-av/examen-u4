@@ -1,5 +1,6 @@
 <?php
 include 'app/config.php';
+$title = "Login";
 ?>
 <!doctype html>
 <html lang="en">

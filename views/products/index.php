@@ -5,6 +5,7 @@ require_once "../../app/ProductsController.php";
 $productController = new controllerProducts();
 $products = $productController->getProducts();
 
+$title = "Lista de Productos";
 ?>
 <!doctype html>
 <html lang="en">
@@ -107,9 +108,9 @@ $products = $productController->getProducts();
 
                         <div class="d-flex flex-wrap gap-1 mb-3">
                           <?php foreach ($product->tags as $tag) : ?>
-                            <a href="#" class="text-decoration-none">
+                            <span class="text-decoration-none">
                               <span class="badge rounded-pill text-bg-info"><?= htmlspecialchars($tag->name) ?></span>
-                            </a>
+                            </span>
                           <?php endforeach; ?>
                         </div>
 

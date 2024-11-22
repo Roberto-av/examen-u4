@@ -17,6 +17,8 @@ $orders = $orderController->getAllOrders();
 $totalProducts = count($products);
 $totalClients = count($clients);
 $totalOrders = count($orders);
+
+$title = "Inicio";
 ?>
 <!doctype html>
 <html lang="en">

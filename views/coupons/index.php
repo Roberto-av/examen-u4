@@ -5,6 +5,8 @@ require_once "../../app/CuponsController.php";
 
 $couponController = new cuponsController();
 $coupons = $couponController->getAllCupons();
+
+$title = "Lista de cupones";
 ?>
 <!doctype html>
 <html lang="en">
@@ -61,7 +63,7 @@ $coupons = $couponController->getAllCupons();
                             <h5>Cupones</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dt-responsive">
+                            <div class="dt-responsive table-responsive">
                                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
@@ -147,6 +149,7 @@ $coupons = $couponController->getAllCupons();
                 "order": [
                     [4, "asc"]
                 ],
+                "scrollX": true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ entradas por página",
                     "zeroRecords": "No se encontraron resultados",

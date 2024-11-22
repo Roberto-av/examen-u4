@@ -2,6 +2,7 @@
 
 include "../../app/config.php";
 
+$title = "Crear cliente";
 ?>
 <!doctype html>
 <html lang="en">

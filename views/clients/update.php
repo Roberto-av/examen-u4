@@ -7,6 +7,7 @@ require_once "../../app/ClientController.php";
 $clienController = new client();
 $client = $clienController->getSpecificClient();
 
+$title = isset($client->name) ? $client->name . " | Actualizar" : "Actualizar cliente";
 ?>
 <!doctype html>
 <html lang="en">

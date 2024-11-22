@@ -15,7 +15,7 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
   $marca = (object) ['name' => 'Marca no disponible'];
 }
 
-
+$title = isset($product->name) ? $product->name . " | Detalles" : "Detalles producto";
 ?>
 <!doctype html>
 <html lang="en">
@@ -141,9 +141,9 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
                     <p class="mb-2">Categorias</p>
                     <div class="d-flex flex-wrap gap-1">
                       <?php foreach ($product->categories as $category) : ?>
-                        <a href="#" class="text-decoration-none">
+                        <span class="text-decoration-none">
                           <span class="badge rounded-pill text-bg-secondary"><?= htmlspecialchars($category->name) ?></span>
-                        </a>
+                        </span>
                       <?php endforeach; ?>
                     </div>
                   </div>
@@ -152,9 +152,9 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
                     <p class="mb-2">Tags</p>
                     <div class="d-flex flex-wrap gap-1">
                       <?php foreach ($product->tags as $tag) : ?>
-                        <a href="#" class="text-decoration-none">
+                        <span class="text-decoration-none">
                           <span class="badge rounded-pill text-bg-dark"><?= htmlspecialchars($tag->name) ?></span>
-                        </a>
+                        </span>
                       <?php endforeach; ?>
                     </div>
                   </div>
@@ -263,7 +263,7 @@ if (isset($product->brand_id) && !empty($product->brand_id)) {
               </div>
             </div>
             <div class="card-body">
-              <div class="dt-responsive">
+              <div class="dt-responsive table-responsive">
                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                   <thead>
                     <tr>

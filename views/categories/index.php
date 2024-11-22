@@ -5,6 +5,8 @@ require_once "../../app/CategoriesController.php";
 
 $categoryController = new categoriesController();
 $categories = $categoryController->getAllCategories();
+
+$title = "Lista de categorias";
 ?>
 <!doctype html>
 <html lang="en">
@@ -61,7 +63,7 @@ $categories = $categoryController->getAllCategories();
                             <h5>Categorías</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dt-responsive">
+                            <div class="dt-responsive table-responsive">
                                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
@@ -211,6 +213,7 @@ $categories = $categoryController->getAllCategories();
                 "order": [
                     [3, "asc"]
                 ],
+                "scrollX": true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ entradas por página",
                     "zeroRecords": "No se encontraron resultados",

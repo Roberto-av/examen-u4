@@ -14,6 +14,7 @@ foreach ($client->orders as $order) {
     }
 }
 
+$title = isset($client->name) ? $client->name . " | Detalles" : "Detalles de cliente";
 ?>
 <!doctype html>
 <html lang="en">

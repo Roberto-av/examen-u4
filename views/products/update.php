@@ -16,6 +16,8 @@ $tags = $tagController->getAllTags();
 
 $categoryController = new categoriesController();
 $categories = $categoryController->getAllCategories();
+
+$title = isset($product->name) ? $product->name . " | Actualizar" : "Acualizar producto";
 ?>
 <!doctype html>
 <html lang="en">

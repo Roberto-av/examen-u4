@@ -6,12 +6,15 @@ require_once "../../app/UserController.php";
 
 $userController = new users();
 $users = $userController->getAllUsers();
+
+$title = "Lista de usuarios";
 ?>
 <!doctype html>
 <html lang="en">
 <!-- [Head] start -->
 
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" />
     <?php include "../layouts/head.php" ?>
 
 </head>
@@ -75,8 +78,8 @@ $users = $userController->getAllUsers();
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
-                                    <?php foreach ($users as $user) : ?>
-                                        <tbody>
+                                    <tbody>
+                                        <?php foreach ($users as $user) : ?>
                                             <tr onclick="window.location.href='<?= BASE_PATH ?>users/details/<?= $user->id ?>'">
 
                                                 <td>
@@ -102,9 +105,9 @@ $users = $userController->getAllUsers();
                                                         </button>
                                                     </div>
                                                 </td>
+                                            <?php endforeach; ?>
                                             </tr>
-                                        <?php endforeach; ?>
-                                        </tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -137,8 +140,13 @@ $users = $userController->getAllUsers();
         </div>
     </div>
 
-
+    <script src="<?= BASE_PATH ?>assets/js/plugins/simple-datatables.js"></script>
     <script>
+        const dataTable = new simpleDatatables.DataTable('#pc-dt-simple', {
+            sortable: false,
+            perPage: 5
+        });
+
         function setUserIdToDelete(userId) {
             document.getElementById('user-id-input').value = userId;
         }

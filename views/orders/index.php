@@ -5,6 +5,8 @@ require_once "../../app/OrdersController.php";
 
 $orderController = new ordersController();
 $orders = $orderController->getAllOrders();
+
+$title = "Lista de ordenes";
 ?>
 <!doctype html>
 <html lang="en">
@@ -56,7 +58,7 @@ $orders = $orderController->getAllOrders();
                             <h5>Ordenes</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dt-responsive">
+                            <div class="dt-responsive table-responsive">
                                 <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
@@ -206,6 +208,7 @@ $orders = $orderController->getAllOrders();
                 "order": [
                     [4, "asc"]
                 ],
+                "scrollX": true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ entradas por página",
                     "zeroRecords": "No se encontraron resultados",

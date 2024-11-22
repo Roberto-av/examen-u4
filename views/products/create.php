@@ -12,6 +12,8 @@ $tags = $tagController->getAllTags();
 
 $categoryController = new categoriesController();
 $categories = $categoryController->getAllCategories();
+
+$title = "Crear Producto";
 ?>
 
 <!doctype html>
