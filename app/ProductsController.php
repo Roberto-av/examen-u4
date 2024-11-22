@@ -137,18 +137,15 @@
         $response = curl_exec($curl);
         $response=json_decode($response);
 
-        if (empty($response)) {
-            throw new Exception("La respuesta está vacía. Verifica la conexión a la API.");
-        }
 
 
         if (isset($response->data)) {
             return $response->data; 
         } else {
             if (isset($response->message)) {
-                throw new Exception("Error de API: " . $response->message);
+                header("Location: ".BASE_PATH."products/");
             } else {
-                throw new Exception("No se encontraron datos para el producto.");
+                header("Location: ".BASE_PATH."products/");
             }
         }
 

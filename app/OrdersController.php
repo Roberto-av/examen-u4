@@ -77,7 +77,7 @@ include_once "config.php";
                     return $response->data;
                 }else{
                     $_SESSION['error_message'] = "Error al obtener usuarios";
-				    header("Location: ".BASE_PATH."users/");
+				    header("Location: ".BASE_PATH."orders/");
 
 
             }
@@ -90,7 +90,7 @@ include_once "config.php";
                 $first_date = $_GET['firs_date'];
                 $second_date = $_GET['second_date'];
             } else {
-                throw new Exception("Slug no proporcionado.");
+                throw new Exception("fechas no encontradas no proporcionado.");
             }
             $curl = curl_init();
 
@@ -117,7 +117,7 @@ include_once "config.php";
                     return $response->data;
                 }else{
                     $_SESSION['error_message'] = "Error al obtener usuarios";
-				    header("Location: ".BASE_PATH."users/");
+				    header("Location: ".BASE_PATH."orders/");
 
 
             }
@@ -128,7 +128,7 @@ include_once "config.php";
             if (isset($_GET['id'])) {
                 $id = $_GET['id'];
             } else {
-                throw new Exception("Slug no proporcionado.");
+                throw new Exception("id no proporcionado.");
             }
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -154,7 +154,7 @@ include_once "config.php";
                     return $response->data;
                 }else{
                     $_SESSION['error_message'] = "Error al obtener usuarios";
-				    header("Location: ".BASE_PATH."users/");
+				    header("Location: ".BASE_PATH."orders/");
 
 
             }
