@@ -78,7 +78,7 @@
                     <div class="dropdown-item" style="cursor: pointer;">
                       <span class="d-flex align-items-center">
                         <i class="ph-duotone ph-power"></i>
-                        <form method="POST" action="auth" style="display: none;" id="logout-form">
+                        <form method="POST" action="<?= BASE_PATH ?>auth" style="display: none;" id="logout-form">
                           <input type="hidden" name="action" value="logout">
                         </form>
                         <span onclick="document.getElementById('logout-form').submit();">Cerrar Sesión</span>

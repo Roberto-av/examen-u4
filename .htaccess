@@ -2,7 +2,6 @@ Options +FollowSymLinks -MultiViews -Indexes
 RewriteEngine on
 
 #páginas
-RewriteRule ^sample/?$ views/sample.php 
 RewriteRule ^home/?$ views/home.php 
 
 #Productos
